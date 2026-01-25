@@ -1,5 +1,9 @@
 #include <image.h>
 
+#include <juce_gui_basics/juce_gui_basics.h>
+
+//-------------------------------------------------------------------------------------------------//
+
 int main(int argc, char **argv)
 {
     for (const auto &inFile : std::filesystem::directory_iterator{ INPUT_DIR })
@@ -30,3 +34,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+//-------------------------------------------------------------------------------------------------//
