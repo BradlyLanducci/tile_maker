@@ -20,8 +20,7 @@
     }
 
 constexpr uint32_t DESIRED_CHANNELS{ 4 };
-const std::string GROUND_INPUT_DIR{ "ground_input" };
-const std::string PATH_INPUT_DIR{ "path_input" };
+const std::string INPUT_DIR{ "input" };
 const std::string OUTPUT_DIR{ "output" };
 const std::string TEMPLATE_DIR{ "templates" };
 
@@ -133,11 +132,19 @@ struct Image
                 }
             }
         }
-        if (!stbi_write_png((OUTPUT_DIR + "/" + ground.filename + "_" + path.filename + "_" + maskSheet.filename +
-                             "_spritesheet.png")
-                                .c_str(),
-                            maskSheet.width, maskSheet.height, maskSheet.channels, outData.data(),
-                            maskSheet.width * maskSheet.channels))
+
+        std::string baseOutputDir{ OUTPUT_DIR + "/" + ground.filename + "/" };
+
+        if (!std::filesystem::exists(baseOutputDir))
+        {
+            std::filesystem::create_directory(baseOutputDir);
+        }
+
+        if (!stbi_write_png(
+                (baseOutputDir + ground.filename + "_" + path.filename + "_" + maskSheet.filename + "_spritesheet.png")
+                    .c_str(),
+                maskSheet.width, maskSheet.height, maskSheet.channels, outData.data(),
+                maskSheet.width * maskSheet.channels))
         {
             std::cerr << "Failed to write" << std::endl;
         }

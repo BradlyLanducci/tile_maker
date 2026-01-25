@@ -1,6 +1,5 @@
 build
-templates/*.png
-ground_input/*.png
-path_input/*.png
-output/*.png
+input/*
+output/*
+templates/*
 .vscode
