@@ -14,6 +14,7 @@ juce_generate_juce_header(${PROJECT_NAME})
 
 file(GLOB SOURCES
         ${CMAKE_SOURCE_DIR}/src/ui/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/image/*.cpp
 )
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
