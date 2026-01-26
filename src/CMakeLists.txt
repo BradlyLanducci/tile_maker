@@ -21,6 +21,7 @@ target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 target_include_directories(${PROJECT_NAME}
         PUBLIC
                 ${CMAKE_SOURCE_DIR}/src
+                ${CMAKE_SOURCE_DIR}/dependencies
 )
 
 target_compile_definitions(${PROJECT_NAME} 
