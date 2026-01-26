@@ -26,7 +26,7 @@ std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData 
         return nullptr;
     }
 
-    std::unique_ptr<ImageData> output{ std::make_unique<ImageData>(in.width, in.height, in.channels) };
+    std::unique_ptr<ImageData> p_output{ std::make_unique<ImageData>(in.width, in.height, in.channels) };
 
     for (uint32_t y = 0; y < in.height; y++)
     {
@@ -35,91 +35,85 @@ std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData 
             if (x < mask.width && y < mask.height)
             {
                 uint32_t pixelOffset{ (y * in.width + x) * in.channels };
-                uint8_t *maskPixelAlpha{ mask.p_data + pixelOffset + 3 };
-                if (*maskPixelAlpha != 0)
+                uint8_t *p_maskPixelAlpha{ mask.p_data + pixelOffset + 3 };
+                if (*p_maskPixelAlpha != 0)
                 {
-                    std::memcpy(output->p_data + pixelOffset, in.p_data + pixelOffset, in.channels);
+                    std::memcpy(p_output->p_data + pixelOffset, in.p_data + pixelOffset, in.channels);
                 }
             }
         }
     }
 
-    return std::move(output);
+    return std::move(p_output);
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-void ImageManipulation::createPathFromSpriteSheet(const ImageData &ground, const ImageData &path,
-                                                  const ImageData &maskSheet)
+std::unique_ptr<ImageData> ImageManipulation::blendABFromTemplate(const ImageData &aImageData,
+                                                                  const ImageData &bImageData,
+                                                                  const ImageData &tmpImageData)
 {
-    if (ground.filename[0] == '.' || path.filename[0] == '.' || maskSheet.filename[0] == '.')
+    if (aImageData.filename[0] == '.' || bImageData.filename[0] == '.' || tmpImageData.filename[0] == '.')
     {
-        return;
+        return nullptr;
     }
 
-    ASSERT((ground.channels == path.channels) && (ground.channels == maskSheet.channels),
+    ASSERT((aImageData.channels == aImageData.channels) && (aImageData.channels == tmpImageData.channels),
            "All images must have the same amount of channels");
-    ASSERT(maskSheet.width % ground.width == 0, "Mask sheet must be multiple of ground");
-    ASSERT(ground.width == path.width, "Ground and path images must have the same width");
-    ASSERT((ground.channels == path.channels) && (ground.channels == maskSheet.channels),
+    ASSERT(tmpImageData.width % aImageData.width == 0, "Mask sheet must be multiple of aImageData");
+    ASSERT(aImageData.width == bImageData.width, "aImageData and b images must have the same width");
+    ASSERT((aImageData.channels == bImageData.channels) && (aImageData.channels == tmpImageData.channels),
            "All images must have the same height");
 
-    uint32_t groundWidth{ (uint32_t)ground.width };
-    uint32_t height{ (uint32_t)ground.height };
+    std::unique_ptr<ImageData> p_output{ std::make_unique<ImageData>(tmpImageData.width, tmpImageData.height,
+                                                                     tmpImageData.channels) };
 
-    uint32_t numTiles{ maskSheet.width / groundWidth };
-    std::vector<uint8_t> outData(maskSheet.width * height * maskSheet.channels, 0);
+    uint32_t aWidth{ (uint32_t)aImageData.width };
+    uint32_t height{ (uint32_t)aImageData.height };
+
+    uint32_t numTiles{ tmpImageData.width / aWidth };
     for (uint32_t t = 0; t < numTiles; t++)
     {
-        uint32_t tileWidthBytes{ groundWidth * maskSheet.channels };
         for (uint32_t y = 0; y < height; y++)
         {
-            for (uint32_t x = 0; x < groundWidth; x++)
+            for (uint32_t x = 0; x < aWidth; x++)
             {
-                uint32_t groundPixelOffsetBytes{ (y * groundWidth + x) * ground.channels };
-                uint32_t maskPixelOffset{ (y * maskSheet.width + x + (t * groundWidth)) * maskSheet.channels };
+                uint32_t aPixelOffsetBytes{ (y * aWidth + x) * aImageData.channels };
+                uint32_t maskPixelOffset{ (y * tmpImageData.width + x + (t * aWidth)) * tmpImageData.channels };
 
-                uint8_t r{ *(maskSheet.p_data + maskPixelOffset) };
-                uint8_t g{ *(maskSheet.p_data + maskPixelOffset + 1) };
-                uint8_t b{ *(maskSheet.p_data + maskPixelOffset + 2) };
+                uint8_t r{ *(tmpImageData.p_data + maskPixelOffset) };
+                uint8_t g{ *(tmpImageData.p_data + maskPixelOffset + 1) };
+                uint8_t b{ *(tmpImageData.p_data + maskPixelOffset + 2) };
                 bool isMask{ r == 0 && g == 0 && b == 0 };
 
                 uint8_t *tileDataToUse{};
                 if (isMask)
                 {
-                    tileDataToUse = ground.p_data;
+                    tileDataToUse = aImageData.p_data;
                 }
                 else
                 {
-                    tileDataToUse = path.p_data;
+                    tileDataToUse = bImageData.p_data;
                 }
 
-                if (maskPixelOffset < (maskSheet.width * maskSheet.height * maskSheet.channels))
+                if (maskPixelOffset < (tmpImageData.width * tmpImageData.height * tmpImageData.channels))
                 {
-                    outData[maskPixelOffset] = tileDataToUse[groundPixelOffsetBytes];
-                    outData[maskPixelOffset + 1] = tileDataToUse[groundPixelOffsetBytes + 1];
-                    outData[maskPixelOffset + 2] = tileDataToUse[groundPixelOffsetBytes + 2];
-                    outData[maskPixelOffset + 3] = tileDataToUse[groundPixelOffsetBytes + 3];
+                    p_output->p_data[maskPixelOffset] = tileDataToUse[aPixelOffsetBytes];
+                    p_output->p_data[maskPixelOffset + 1] = tileDataToUse[aPixelOffsetBytes + 1];
+                    p_output->p_data[maskPixelOffset + 2] = tileDataToUse[aPixelOffsetBytes + 2];
+                    p_output->p_data[maskPixelOffset + 3] = tileDataToUse[aPixelOffsetBytes + 3];
                 }
             }
         }
     }
-
-    std::string baseOutputDir{ OUTPUT_DIR + "/" + ground.filename + "/" };
+    std::string baseOutputDir{ OUTPUT_DIR + "/" + aImageData.filename + "/" };
 
     if (!std::filesystem::exists(baseOutputDir))
     {
         std::filesystem::create_directory(baseOutputDir);
     }
 
-    // if (!stbi_write_png(
-    //         (baseOutputDir + ground.filename + "_" + path.filename + "_" + maskSheet.filename + "_spritesheet.png")
-    //             .c_str(),
-    //         maskSheet.width, maskSheet.height, maskSheet.channels, outData.p_data(),
-    //         maskSheet.width * maskSheet.channels))
-    // {
-    //     std::cerr << "Failed to write" << std::endl;
-    // }
+    return std::move(p_output);
 }
 
 //-------------------------------------------------------------------------------------------------//

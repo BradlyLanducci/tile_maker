@@ -35,6 +35,8 @@ MainContent::MainContent()
             resized();
         }
     };
+
+    m_editorSelector.setSelectedId((int)EditorType::Masker);
 }
 
 //-------------------------------------------------------------------------------------------------//

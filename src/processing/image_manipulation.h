@@ -11,10 +11,10 @@ public:
     static std::unique_ptr<ImageData> createMaskedImage(const ImageData &in, const ImageData &mask);
 
     /// @brief Creates all path variants from provided input and path textures
-    /// @param ground Ground texture
-    /// @param path Path texture
-    /// @param maskSheet The spritesheet of masks
-    static void createPathFromSpriteSheet(const ImageData &ground, const ImageData &path, const ImageData &maskSheet);
+    /// @param a Texture A
+    /// @param b Texture B
+    /// @param tmp Template texture
+    static std::unique_ptr<ImageData> blendABFromTemplate(const ImageData &a, const ImageData &b, const ImageData &tmp);
 };
 
 //-------------------------------------------------------------------------------------------------//

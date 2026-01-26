@@ -17,7 +17,8 @@ public:
 private:
     std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, const juce::StringArray &files);
 
-    TitledComponent m_inputs;
+    TitledComponent m_inputsA;
+    TitledComponent m_inputsB;
     TitledComponent m_template;
     TitledComponent m_output;
 };

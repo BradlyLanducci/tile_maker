@@ -1,7 +1,6 @@
 #include <ui/components/image_frame.h>
 
 #include <processing/image_data.h>
-#include "image_frame.h"
 
 //-------------------------------------------------------------------------------------------------//
 
