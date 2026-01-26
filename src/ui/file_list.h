@@ -6,16 +6,10 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-class ImageList : public juce::Component
+class FileList : public juce::ListBox
 {
 public:
-    ImageList(const juce::StringArray &images);
-
-    void resized() override;
-
-private:
-    FileListModel m_model;
-    juce::ListBox m_list;
+    FileList(FileListModel &model);
 };
 
 //-------------------------------------------------------------------------------------------------//

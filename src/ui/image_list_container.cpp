@@ -1,18 +1,19 @@
-#include <ui/image_list.h>
+#include <ui/image_list_container.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageList::ImageList(const juce::StringArray &images)
+ImageListContainer::ImageListContainer(const juce::StringArray &images)
     : m_model(images)
-    , m_list("images", &m_model)
+    , m_list(m_model)
 {
+    m_list.setColour(juce::ListBox::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(m_list);
     m_list.updateContent();
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-void ImageList::resized()
+void ImageListContainer::resized()
 {
     m_list.setBounds(getBounds());
 }

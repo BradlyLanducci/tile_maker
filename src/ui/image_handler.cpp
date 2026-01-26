@@ -1,6 +1,6 @@
 #include <ui/image_handler.h>
 #include <ui/image_frame.h>
-#include <ui/image_list.h>
+#include <ui/image_list_container.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -38,7 +38,7 @@ void ImageHandler::filesDropped(const juce::StringArray &files, int x, int y)
     }
     else
     {
-        mp_imageDisplayer = std::make_unique<ImageList>(files);
+        mp_imageDisplayer = std::make_unique<ImageListContainer>(files);
     }
     mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
     addAndMakeVisible(mp_imageDisplayer.get());
