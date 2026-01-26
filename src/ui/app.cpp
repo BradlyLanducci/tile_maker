@@ -4,6 +4,7 @@
 
 void App::initialise(const juce::String &commandLine)
 {
+    (void)commandLine;
     mp_window.reset(new MainWindow("Iso Tile Maker"));
     mp_window->setBounds(100, 100, 400, 500);
     mp_window->setVisible(true);

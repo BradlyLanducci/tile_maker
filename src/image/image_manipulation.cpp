@@ -1,5 +1,7 @@
 #include <image/image_manipulation.h>
 
+#include <iostream>
+
 //-------------------------------------------------------------------------------------------------//
 
 #define ASSERT(condition, message)                                                                                     \
