@@ -1,22 +1,25 @@
 #pragma once
 
-#include <ui/main_content.h>
+#include <ui/components/image_drop_view.h>
+#include <ui/components/titled_component.h>
 
 #include <juce_gui_basics/juce_gui_basics.h>
-#include <memory>
 
 //-------------------------------------------------------------------------------------------------//
 
-class MainWindow : public juce::DocumentWindow
+class Blender : public juce::Component
 {
 public:
-    MainWindow(juce::String name);
+    Blender();
 
-    void closeButtonPressed();
+    void resized() override;
 
 private:
-    MainContent m_content;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
+    void imagesUpdated();
+
+    TitledComponent m_inputs;
+    TitledComponent m_template;
+    TitledComponent m_output;
 };
 
 //-------------------------------------------------------------------------------------------------//

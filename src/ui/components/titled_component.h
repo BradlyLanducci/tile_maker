@@ -12,7 +12,10 @@ public:
     void paint(juce::Graphics &g) override;
     void resized() override;
 
-    juce::Component *getComponent();
+    template <typename ComponentType> ComponentType *getComponent()
+    {
+        return static_cast<ComponentType *>(mp_component.get());
+    }
 
 private:
     juce::String m_title;

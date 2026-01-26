@@ -1,5 +1,6 @@
 #include <ui/main_content.h>
 #include <ui/editors/masker.h>
+#include <ui/editors/blender.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -20,7 +21,7 @@ MainContent::MainContent()
             mp_editor = std::make_unique<Masker>();
             break;
         case EditorType::Blender:
-            mp_editor = std::make_unique<Masker>();
+            mp_editor = std::make_unique<Blender>();
             break;
         default:
             mp_editor = nullptr;

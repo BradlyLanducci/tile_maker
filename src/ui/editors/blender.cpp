@@ -1,25 +1,25 @@
-#include <ui/editors/masker.h>
+#include <ui/editors/blender.h>
 #include <processing/image_manipulation.h>
 #include <ui/components/image_frame.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-Masker::Masker()
-    : m_input("Input", new ImageDropView([this]() { imagesUpdated(); }))
-    , m_mask("Mask", new ImageDropView([this]() { imagesUpdated(); }))
+Blender::Blender()
+    : m_inputs("Inputs", new ImageDropView([this]() { imagesUpdated(); }))
+    , m_template("Template", new ImageDropView([this]() { imagesUpdated(); }))
     , m_output("Output", new ImageFrame())
 {
-    addAndMakeVisible(m_input);
-    addAndMakeVisible(m_mask);
+    addAndMakeVisible(m_inputs);
+    addAndMakeVisible(m_template);
     addAndMakeVisible(m_output);
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-void Masker::imagesUpdated()
+void Blender::imagesUpdated()
 {
-    juce::StringArray inImages{ m_input.getComponent<ImageDropView>()->getImages() };
-    juce::StringArray maskImages{ m_mask.getComponent<ImageDropView>()->getImages() };
+    juce::StringArray inImages{ m_inputs.getComponent<ImageDropView>()->getImages() };
+    juce::StringArray maskImages{ m_template.getComponent<ImageDropView>()->getImages() };
 
     ImageFrame *p_output{ m_output.getComponent<ImageFrame>() };
     if (inImages.isEmpty() || maskImages.isEmpty())
@@ -42,7 +42,7 @@ void Masker::imagesUpdated()
 
 //-------------------------------------------------------------------------------------------------//
 
-void Masker::resized()
+void Blender::resized()
 {
     auto bounds{ getLocalBounds() };
     int thirdWidth{ bounds.getWidth() / 3 };
@@ -63,8 +63,8 @@ void Masker::resized()
     int sideLength{ std::min(left.getWidth(), left.getHeight()) };
 
     int centeredHeight{ (bounds.getHeight() - sideLength) / 2 };
-    m_input.setBounds(left.getX(), centeredHeight, sideLength, sideLength);
-    m_mask.setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
+    m_inputs.setBounds(left.getX(), centeredHeight, sideLength, sideLength);
+    m_template.setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
     m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
 }
 
