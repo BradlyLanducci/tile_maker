@@ -35,10 +35,10 @@ std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData 
             if (x < mask.width && y < mask.height)
             {
                 uint32_t pixelOffset{ (y * in.width + x) * in.channels };
-                uint8_t *maskPixelAlpha{ mask.data + pixelOffset + 3 };
+                uint8_t *maskPixelAlpha{ mask.p_data + pixelOffset + 3 };
                 if (*maskPixelAlpha != 0)
                 {
-                    std::memcpy(output->data + pixelOffset, in.data + pixelOffset, in.channels);
+                    std::memcpy(output->p_data + pixelOffset, in.p_data + pixelOffset, in.channels);
                 }
             }
         }
@@ -79,19 +79,19 @@ void ImageManipulation::createPathFromSpriteSheet(const ImageData &ground, const
                 uint32_t groundPixelOffsetBytes{ (y * groundWidth + x) * ground.channels };
                 uint32_t maskPixelOffset{ (y * maskSheet.width + x + (t * groundWidth)) * maskSheet.channels };
 
-                uint8_t r{ *(maskSheet.data + maskPixelOffset) };
-                uint8_t g{ *(maskSheet.data + maskPixelOffset + 1) };
-                uint8_t b{ *(maskSheet.data + maskPixelOffset + 2) };
+                uint8_t r{ *(maskSheet.p_data + maskPixelOffset) };
+                uint8_t g{ *(maskSheet.p_data + maskPixelOffset + 1) };
+                uint8_t b{ *(maskSheet.p_data + maskPixelOffset + 2) };
                 bool isMask{ r == 0 && g == 0 && b == 0 };
 
                 uint8_t *tileDataToUse{};
                 if (isMask)
                 {
-                    tileDataToUse = ground.data;
+                    tileDataToUse = ground.p_data;
                 }
                 else
                 {
-                    tileDataToUse = path.data;
+                    tileDataToUse = path.p_data;
                 }
 
                 if (maskPixelOffset < (maskSheet.width * maskSheet.height * maskSheet.channels))
@@ -115,7 +115,7 @@ void ImageManipulation::createPathFromSpriteSheet(const ImageData &ground, const
     // if (!stbi_write_png(
     //         (baseOutputDir + ground.filename + "_" + path.filename + "_" + maskSheet.filename + "_spritesheet.png")
     //             .c_str(),
-    //         maskSheet.width, maskSheet.height, maskSheet.channels, outData.data(),
+    //         maskSheet.width, maskSheet.height, maskSheet.channels, outData.p_data(),
     //         maskSheet.width * maskSheet.channels))
     // {
     //     std::cerr << "Failed to write" << std::endl;

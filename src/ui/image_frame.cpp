@@ -22,7 +22,7 @@ void ImageFrame::setImage(std::unique_ptr<ImageData> p_imageData)
 {
     int w{ p_imageData->width };
     int h{ p_imageData->height };
-    const uint8_t *src{ p_imageData->data };
+    const uint8_t *src{ p_imageData->p_data };
 
     m_image = juce::Image(juce::Image::ARGB, w, h, true);
 

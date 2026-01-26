@@ -8,7 +8,7 @@ MainWindow::MainWindow(juce::String name)
     centreWithSize(300, 200);
     setVisible(true);
 
-    setContentOwned(&m_masker, true);
+    setContentOwned(&m_content, true);
 }
 
 //-------------------------------------------------------------------------------------------------//

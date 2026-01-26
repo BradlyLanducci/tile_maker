@@ -24,7 +24,7 @@ struct ImageData
     int width{};
     int height{};
     int channels{};
-    uint8_t *data{ nullptr };
+    uint8_t *p_data{ nullptr };
     std::string filename{};
 };
 

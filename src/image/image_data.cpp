@@ -1,7 +1,11 @@
 #include <image/image_data.h>
 
+#ifndef STB_IMAGE_IMPLEMENTATION
+
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
+
+#endif
 
 #include <stb_image.h>
 #include <stb_image_write.h>
@@ -12,15 +16,15 @@ ImageData::ImageData(int imageWidth, int imageHeight, int imageChannels)
     : width(imageWidth)
     , height(imageHeight)
     , channels(imageChannels)
-    , data((uint8_t *)malloc(width * height * imageChannels)) // We malloc to be consistent with stbi
+    , p_data((uint8_t *)malloc(width * height * imageChannels)) // We malloc to be consistent with stbi
 {
-    std::fill(data, data + getSizeBytes(), 0);
+    std::fill(p_data, p_data + getSizeBytes(), 0);
 }
 
 //-------------------------------------------------------------------------------------------------//
 
 ImageData::ImageData(std::filesystem::path path)
-    : data(stbi_load(path.string().c_str(), &width, &height, &channels, DESIRED_CHANNELS))
+    : p_data(stbi_load(path.string().c_str(), &width, &height, &channels, DESIRED_CHANNELS))
 {
     path.replace_extension();
     filename = path.filename().string();
@@ -30,10 +34,10 @@ ImageData::ImageData(std::filesystem::path path)
 
 ImageData::~ImageData()
 {
-    if (data)
+    if (p_data)
     {
-        free(data);
-        data = nullptr;
+        free(p_data);
+        p_data = nullptr;
     }
 }
 

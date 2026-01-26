@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/masker.h>
+#include <ui/main_content.h>
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <memory>
@@ -15,8 +15,7 @@ public:
     void closeButtonPressed();
 
 private:
-    Masker m_masker;
-
+    MainContent m_content;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainWindow)
 };
 
