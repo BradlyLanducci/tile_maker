@@ -1,6 +1,5 @@
 #include <ui/components/image_drop_view.h>
 #include <ui/components/image_frame.h>
-#include <ui/components/image_list.h>
 #include <processing/image_manipulation.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -9,8 +8,8 @@ const float HOVER_ALPHA{ 0.75f };
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageDropView::ImageDropView(std::function<void()> imageUpdatedCb)
-    : m_imageUpdatedCb(imageUpdatedCb)
+ImageDropView::ImageDropView(FactoryCallback factoryCb)
+    : m_factoryCb(factoryCb)
 {
 }
 
@@ -93,20 +92,12 @@ void ImageDropView::filesDropped(const juce::StringArray &files, int x, int y)
 
     auto bounds{ getBounds() };
 
-    if (files.size() == 1)
+    mp_imageDisplayer = m_factoryCb(this, files);
+    if (mp_imageDisplayer)
     {
-        std::unique_ptr<ImageData> imageData{ std::make_unique<ImageData>(files[0].toStdString()) };
-        mp_imageDisplayer = std::make_unique<ImageFrame>(std::move(imageData));
+        mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
+        addAndMakeVisible(mp_imageDisplayer.get());
     }
-    else
-    {
-        mp_imageDisplayer = std::make_unique<ImageList>(files);
-    }
-
-    mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
-    addAndMakeVisible(mp_imageDisplayer.get());
-
-    m_imageUpdatedCb();
 }
 
 //-------------------------------------------------------------------------------------------------//

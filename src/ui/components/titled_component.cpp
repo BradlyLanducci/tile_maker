@@ -17,7 +17,7 @@ TitledComponent::TitledComponent(const juce::String &title, juce::Component *p_c
 
 void TitledComponent::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colours::beige);
+    g.fillAll(juce::Colours::darkslategrey);
     auto bounds{ getBounds() };
     g.drawText(m_title, 0, 0, bounds.getWidth(), TEXT_SIZE, juce::Justification::centred);
 }

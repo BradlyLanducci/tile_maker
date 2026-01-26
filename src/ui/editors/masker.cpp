@@ -1,12 +1,16 @@
 #include <ui/editors/masker.h>
 #include <processing/image_manipulation.h>
 #include <ui/components/image_frame.h>
+#include <ui/models/file_list_model.h>
+#include <ui/components/image_list.h>
 
 //-------------------------------------------------------------------------------------------------//
 
 Masker::Masker()
-    : m_input("Input", new ImageDropView([this]() { imagesUpdated(); }))
-    , m_mask("Mask", new ImageDropView([this]() { imagesUpdated(); }))
+    : m_input("Input", new ImageDropView([this](juce::Component *p_caller, const juce::StringArray &files)
+                                         { return imagesUpdated(p_caller, files); }))
+    , m_mask("Mask", new ImageDropView([this](juce::Component *p_caller, const juce::StringArray &files)
+                                       { return imagesUpdated(p_caller, files); }))
     , m_output("Output", new ImageFrame())
 {
     addAndMakeVisible(m_input);
@@ -16,8 +20,21 @@ Masker::Masker()
 
 //-------------------------------------------------------------------------------------------------//
 
-void Masker::imagesUpdated()
+std::unique_ptr<juce::Component> Masker::imagesUpdated(juce::Component *p_caller, const juce::StringArray &files)
 {
+    (void)p_caller;
+
+    std::unique_ptr<juce::Component> p_imageDisplayer{ nullptr };
+    if (files.size() == 1)
+    {
+        std::unique_ptr<ImageData> imageData{ std::make_unique<ImageData>(files[0].toStdString()) };
+        p_imageDisplayer = std::make_unique<ImageFrame>(std::move(imageData));
+    }
+    else
+    {
+        p_imageDisplayer = std::make_unique<ImageList<FileListModel>>(files);
+    }
+
     juce::StringArray inImages{ m_input.getComponent<ImageDropView>()->getImages() };
     juce::StringArray maskImages{ m_mask.getComponent<ImageDropView>()->getImages() };
 
@@ -25,7 +42,6 @@ void Masker::imagesUpdated()
     if (inImages.isEmpty() || maskImages.isEmpty())
     {
         p_output->reset();
-        return;
     }
 
     for (const auto &inImage : inImages)
@@ -38,6 +54,8 @@ void Masker::imagesUpdated()
             p_output->setImage(std::move(out));
         }
     }
+
+    return std::move(p_imageDisplayer);
 }
 
 //-------------------------------------------------------------------------------------------------//

@@ -6,12 +6,14 @@
 
 //-------------------------------------------------------------------------------------------------//
 
+using FactoryCallback = std::function<std::unique_ptr<juce::Component>(juce::Component *, juce::StringArray)>;
+
 class ImageDropView
     : public juce::Component
     , public juce::FileDragAndDropTarget
 {
 public:
-    ImageDropView(std::function<void()> imageUpdatedCb);
+    ImageDropView(FactoryCallback factoryCb);
 
     juce::StringArray getImages();
 
@@ -28,7 +30,7 @@ private:
 
     juce::StringArray m_images;
 
-    std::function<void()> m_imageUpdatedCb;
+    FactoryCallback m_factoryCb;
 
     bool m_hovered{ false };
 

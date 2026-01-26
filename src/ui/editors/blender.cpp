@@ -1,12 +1,17 @@
 #include <ui/editors/blender.h>
 #include <processing/image_manipulation.h>
 #include <ui/components/image_frame.h>
+#include <ui/models/mapped_file_list_model.h>
+#include <ui/models/file_list_model.h>
+#include <ui/components/image_list.h>
 
 //-------------------------------------------------------------------------------------------------//
 
 Blender::Blender()
-    : m_inputs("Inputs", new ImageDropView([this]() { imagesUpdated(); }))
-    , m_template("Template", new ImageDropView([this]() { imagesUpdated(); }))
+    : m_inputs("Inputs", new ImageDropView([this](juce::Component *p_caller, const juce::StringArray &files)
+                                           { return imagesUpdated(p_caller, files); }))
+    , m_template("Template", new ImageDropView([this](juce::Component *p_caller, const juce::StringArray &files)
+                                               { return imagesUpdated(p_caller, files); }))
     , m_output("Output", new ImageFrame())
 {
     addAndMakeVisible(m_inputs);
@@ -16,17 +21,33 @@ Blender::Blender()
 
 //-------------------------------------------------------------------------------------------------//
 
-void Blender::imagesUpdated()
+std::unique_ptr<juce::Component> Blender::imagesUpdated(juce::Component *p_caller, const juce::StringArray &files)
 {
+    std::unique_ptr<juce::Component> p_imageDisplayer{ nullptr };
+    if (files.size() == 1)
+    {
+        std::unique_ptr<ImageData> imageData{ std::make_unique<ImageData>(files[0].toStdString()) };
+        p_imageDisplayer = std::make_unique<ImageFrame>(std::move(imageData));
+    }
+    else
+    {
+        auto parent{ p_caller->getParentComponent() };
+        if (parent == &m_inputs)
+        {
+            p_imageDisplayer = std::make_unique<ImageList<MappedFileListModel>>(files);
+        }
+        else
+        {
+            p_imageDisplayer = std::make_unique<ImageList<FileListModel>>(files);
+        }
+    }
+
     juce::StringArray inImages{ m_inputs.getComponent<ImageDropView>()->getImages() };
     juce::StringArray maskImages{ m_template.getComponent<ImageDropView>()->getImages() };
 
     ImageFrame *p_output{ m_output.getComponent<ImageFrame>() };
-    if (inImages.isEmpty() || maskImages.isEmpty())
-    {
-        p_output->reset();
-        return;
-    }
+
+    p_output->reset();
 
     for (const auto &inImage : inImages)
     {
@@ -38,6 +59,8 @@ void Blender::imagesUpdated()
             p_output->setImage(std::move(out));
         }
     }
+
+    return std::move(p_imageDisplayer);
 }
 
 //-------------------------------------------------------------------------------------------------//

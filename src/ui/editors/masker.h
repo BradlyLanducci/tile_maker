@@ -15,7 +15,7 @@ public:
     void resized() override;
 
 private:
-    void imagesUpdated();
+    std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, const juce::StringArray &files);
 
     TitledComponent m_input;
     TitledComponent m_mask;

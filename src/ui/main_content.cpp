@@ -23,6 +23,7 @@ MainContent::MainContent()
         case EditorType::Blender:
             mp_editor = std::make_unique<Blender>();
             break;
+        case EditorType::None:
         default:
             mp_editor = nullptr;
             break;

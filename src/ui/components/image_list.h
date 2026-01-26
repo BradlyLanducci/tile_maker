@@ -1,20 +1,28 @@
 #pragma once
 
-#include <ui/models/file_list_model.h>
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-class ImageList : public juce::Component
+template <typename ModelType> class ImageList : public juce::Component
 {
 public:
-    ImageList(const juce::StringArray &images);
+    ImageList(const juce::StringArray &images)
+        : m_model(images)
+        , m_list("images", &m_model)
+    {
+        m_list.setColour(juce::ListBox::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
+        addAndMakeVisible(m_list);
+        m_list.updateContent();
+    }
 
-    void resized() override;
+    void resized() override
+    {
+        m_list.setBounds(getBounds());
+    }
 
 private:
-    FileListModel m_model;
+    ModelType m_model;
     juce::ListBox m_list;
 };
 
