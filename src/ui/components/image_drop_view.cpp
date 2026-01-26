@@ -1,8 +1,7 @@
-#include <ui/image_drop_view.h>
-#include <ui/image_frame.h>
-#include <ui/image_list_container.h>
-
-#include <image/image_manipulation.h>
+#include <ui/components/image_drop_view.h>
+#include <ui/components/image_frame.h>
+#include <ui/components/image_list.h>
+#include <processing/image_manipulation.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -101,7 +100,7 @@ void ImageDropView::filesDropped(const juce::StringArray &files, int x, int y)
     }
     else
     {
-        mp_imageDisplayer = std::make_unique<ImageListContainer>(files);
+        mp_imageDisplayer = std::make_unique<ImageList>(files);
     }
 
     mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());

@@ -12,9 +12,8 @@ FetchContent_MakeAvailable(JUCE)
 juce_add_gui_app(${PROJECT_NAME} PRODUCT_NAME "Iso Tile Maker")
 juce_generate_juce_header(${PROJECT_NAME})
 
-file(GLOB SOURCES
-        ${CMAKE_SOURCE_DIR}/src/ui/*.cpp
-        ${CMAKE_SOURCE_DIR}/src/image/*.cpp
+file(GLOB_RECURSE SOURCES
+        ${CMAKE_SOURCE_DIR}/src/*.cpp
 )
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})

@@ -1,6 +1,6 @@
-#include <ui/image_frame.h>
+#include <ui/components/image_frame.h>
 
-#include <image/image_data.h>
+#include <processing/image_data.h>
 
 //-------------------------------------------------------------------------------------------------//
 

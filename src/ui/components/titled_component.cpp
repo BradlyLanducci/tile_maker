@@ -1,4 +1,4 @@
-#include <ui/titled_component.h>
+#include <ui/components/titled_component.h>
 
 //-------------------------------------------------------------------------------------------------//
 

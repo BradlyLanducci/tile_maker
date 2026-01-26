@@ -1,7 +1,6 @@
-#include <ui/masker.h>
-
-#include <image/image_manipulation.h>
-#include <ui/image_frame.h>
+#include <ui/editors/masker.h>
+#include <processing/image_manipulation.h>
+#include <ui/components/image_frame.h>
 
 //-------------------------------------------------------------------------------------------------//
 

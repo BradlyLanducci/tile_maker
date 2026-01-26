@@ -1,6 +1,5 @@
 #include <ui/main_content.h>
-#include <ui/masker.h>
-#include "main_content.h"
+#include <ui/editors/masker.h>
 
 //-------------------------------------------------------------------------------------------------//
 

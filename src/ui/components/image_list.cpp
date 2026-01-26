@@ -1,10 +1,10 @@
-#include <ui/image_list_container.h>
+#include <ui/components/image_list.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageListContainer::ImageListContainer(const juce::StringArray &images)
+ImageList::ImageList(const juce::StringArray &images)
     : m_model(images)
-    , m_list(m_model)
+    , m_list("images", &m_model)
 {
     m_list.setColour(juce::ListBox::ColourIds::backgroundColourId, juce::Colours::transparentBlack);
     addAndMakeVisible(m_list);
@@ -13,7 +13,7 @@ ImageListContainer::ImageListContainer(const juce::StringArray &images)
 
 //-------------------------------------------------------------------------------------------------//
 
-void ImageListContainer::resized()
+void ImageList::resized()
 {
     m_list.setBounds(getBounds());
 }

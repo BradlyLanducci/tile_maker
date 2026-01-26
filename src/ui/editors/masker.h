@@ -1,21 +1,25 @@
 #pragma once
 
-#include <ui/file_list.h>
+#include <ui/components/image_drop_view.h>
+#include <ui/components/titled_component.h>
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-class ImageListContainer : public juce::Component
+class Masker : public juce::Component
 {
 public:
-    ImageListContainer(const juce::StringArray &images);
+    Masker();
 
     void resized() override;
 
 private:
-    FileListModel m_model;
-    FileList m_list;
+    void imagesUpdated();
+
+    TitledComponent m_input;
+    TitledComponent m_mask;
+    TitledComponent m_output;
 };
 
 //-------------------------------------------------------------------------------------------------//

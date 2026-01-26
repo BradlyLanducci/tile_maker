@@ -1,4 +1,4 @@
-#include <image/image_manipulation.h>
+#include <processing/image_manipulation.h>
 
 #include <iostream>
 
