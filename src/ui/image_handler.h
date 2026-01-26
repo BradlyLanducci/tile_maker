@@ -14,8 +14,15 @@ public:
 
     void paint(juce::Graphics &g) override;
 
+    void fileDragEnter(const juce::StringArray &files, int x, int y) override;
+    void fileDragExit(const juce::StringArray &files) override;
+
+    //-------------------------------------------------------------------------------------------------//
+
 private:
     bool isValidType(juce::String file);
+
+    bool m_hovered{ false };
 
     std::array<std::string, 3> m_validTypes{ ".png", ".jpeg", ".jpg" };
 

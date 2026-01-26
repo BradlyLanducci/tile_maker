@@ -1,8 +1,10 @@
 #include <ui/masker.h>
-#include "masker.h"
+
 //-------------------------------------------------------------------------------------------------//
 
 Masker::Masker()
+    : m_input("Input")
+    , m_mask("Mask")
 {
     addAndMakeVisible(m_input);
     addAndMakeVisible(m_mask);
@@ -18,7 +20,7 @@ void Masker::resized()
     auto leftSide{ bounds.removeFromRight(halfWidth) };
     auto rightSide{ bounds.removeFromLeft(halfWidth) };
 
-    const int padding{ 5 };
+    const int padding{ 4 };
     leftSide.reduce(padding, padding);
     rightSide.reduce(padding, padding);
 

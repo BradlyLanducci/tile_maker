@@ -4,9 +4,52 @@
 
 //-------------------------------------------------------------------------------------------------//
 
+const float HOVER_ALPHA{ 0.75f };
+
+//-------------------------------------------------------------------------------------------------//
+
 void ImageHandler::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colours::beige);
+    if (mp_imageDisplayer)
+    {
+        if (m_hovered)
+        {
+            mp_imageDisplayer->setAlpha(HOVER_ALPHA);
+        }
+        else
+        {
+            mp_imageDisplayer->setAlpha(1.f);
+        }
+    }
+    else
+    {
+        if (m_hovered)
+        {
+            g.fillAll(juce::Colours::red.withAlpha(HOVER_ALPHA));
+        }
+        else
+        {
+            g.fillAll(juce::Colours::red);
+        }
+
+        g.drawText("Drag file here", getLocalBounds(), juce::Justification::centred);
+    }
+}
+
+//-------------------------------------------------------------------------------------------------//
+
+void ImageHandler::fileDragEnter(const juce::StringArray &, int, int)
+{
+    m_hovered = true;
+    repaint();
+}
+
+//-------------------------------------------------------------------------------------------------//
+
+void ImageHandler::fileDragExit(const juce::StringArray &)
+{
+    m_hovered = false;
+    repaint();
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -30,6 +73,8 @@ void ImageHandler::filesDropped(const juce::StringArray &files, int x, int y)
     (void)x;
     (void)y;
 
+    m_hovered = false;
+
     auto bounds{ getBounds() };
 
     if (files.size() == 1)
@@ -40,6 +85,7 @@ void ImageHandler::filesDropped(const juce::StringArray &files, int x, int y)
     {
         mp_imageDisplayer = std::make_unique<ImageListContainer>(files);
     }
+
     mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
     addAndMakeVisible(mp_imageDisplayer.get());
 }

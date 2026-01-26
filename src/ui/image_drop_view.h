@@ -1,21 +1,22 @@
 #pragma once
 
-#include <ui/image_drop_view.h>
-
-#include <juce_gui_basics/juce_gui_basics.h>
+#include <ui/image_handler.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-class Masker : public juce::Component
+class ImageDropView : public juce::Component
 {
 public:
-    Masker();
+    ImageDropView(const juce::String &title);
 
+    void paint(juce::Graphics &g) override;
     void resized() override;
 
+    juce::StringArray getImages();
+
 private:
-    ImageDropView m_input;
-    ImageDropView m_mask;
+    juce::String m_title;
+    ImageHandler m_handler;
 };
 
 //-------------------------------------------------------------------------------------------------//
