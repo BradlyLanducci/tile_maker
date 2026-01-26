@@ -14,12 +14,19 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-void ImageManipulation::createMaskedImage(const Image &in, const Image &mask)
+std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData &in, const ImageData &mask)
 {
     if (in.filename == ".gitkeep" || mask.filename == ".gitkeep")
     {
-        return;
+        return nullptr;
     }
+
+    if (in.width != mask.width || in.height != mask.height || in.channels != mask.channels)
+    {
+        return nullptr;
+    }
+
+    std::unique_ptr<ImageData> output{ std::make_unique<ImageData>(in.width, in.height, in.channels) };
 
     for (uint32_t y = 0; y < in.height; y++)
     {
@@ -28,26 +35,22 @@ void ImageManipulation::createMaskedImage(const Image &in, const Image &mask)
             if (x < mask.width && y < mask.height)
             {
                 uint32_t pixelOffset{ (y * in.width + x) * in.channels };
-                uint8_t *inPixelAlpha{ in.data + pixelOffset + 3 };
                 uint8_t *maskPixelAlpha{ mask.data + pixelOffset + 3 };
-                if (*maskPixelAlpha == 0)
+                if (*maskPixelAlpha != 0)
                 {
-                    *inPixelAlpha = 0;
+                    std::memcpy(output->data + pixelOffset, in.data + pixelOffset, in.channels);
                 }
             }
         }
     }
 
-    if (!stbi_write_png((OUTPUT_DIR + "/" + in.filename + "_" + mask.filename + ".png").c_str(), in.width, in.height,
-                        in.channels, in.data, in.width * in.channels))
-    {
-        std::cerr << "Failed to write\n";
-    }
+    return std::move(output);
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-void ImageManipulation::createPathFromSpriteSheet(const Image &ground, const Image &path, const Image &maskSheet)
+void ImageManipulation::createPathFromSpriteSheet(const ImageData &ground, const ImageData &path,
+                                                  const ImageData &maskSheet)
 {
     if (ground.filename[0] == '.' || path.filename[0] == '.' || maskSheet.filename[0] == '.')
     {
@@ -109,14 +112,14 @@ void ImageManipulation::createPathFromSpriteSheet(const Image &ground, const Ima
         std::filesystem::create_directory(baseOutputDir);
     }
 
-    if (!stbi_write_png(
-            (baseOutputDir + ground.filename + "_" + path.filename + "_" + maskSheet.filename + "_spritesheet.png")
-                .c_str(),
-            maskSheet.width, maskSheet.height, maskSheet.channels, outData.data(),
-            maskSheet.width * maskSheet.channels))
-    {
-        std::cerr << "Failed to write" << std::endl;
-    }
+    // if (!stbi_write_png(
+    //         (baseOutputDir + ground.filename + "_" + path.filename + "_" + maskSheet.filename + "_spritesheet.png")
+    //             .c_str(),
+    //         maskSheet.width, maskSheet.height, maskSheet.channels, outData.data(),
+    //         maskSheet.width * maskSheet.channels))
+    // {
+    //     std::cerr << "Failed to write" << std::endl;
+    // }
 }
 
 //-------------------------------------------------------------------------------------------------//

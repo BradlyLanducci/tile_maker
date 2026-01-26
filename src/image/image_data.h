@@ -1,11 +1,5 @@
 #pragma once
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-
-#include <stb_image.h>
-#include <stb_image_write.h>
-
 #include <cstdint>
 #include <filesystem>
 #include <string>
@@ -19,22 +13,13 @@ const std::string TEMPLATE_DIR{ "templates" };
 
 //-------------------------------------------------------------------------------------------------//
 
-struct Image
+struct ImageData
 {
-    Image(std::filesystem::path path)
-        : data(stbi_load(path.string().c_str(), &width, &height, &channels, DESIRED_CHANNELS))
-    {
-        path.replace_extension();
-        filename = path.filename().string();
-    }
+    ImageData(int imageWidth, int imageHeight, int imageChannels);
+    ImageData(std::filesystem::path path);
+    ~ImageData();
 
-    ~Image()
-    {
-        if (data)
-        {
-            stbi_image_free(data);
-        }
-    }
+    uint32_t getSizeBytes();
 
     int width{};
     int height{};

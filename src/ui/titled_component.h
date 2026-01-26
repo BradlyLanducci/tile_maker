@@ -1,25 +1,22 @@
 #pragma once
 
-#include <ui/image_drop_view.h>
-#include <ui/titled_component.h>
-
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-class Masker : public juce::Component
+class TitledComponent : public juce::Component
 {
 public:
-    Masker();
+    TitledComponent(const juce::String &title, juce::Component *p_component);
 
+    void paint(juce::Graphics &g) override;
     void resized() override;
 
-private:
-    void imagesUpdated();
+    juce::Component *getComponent();
 
-    TitledComponent m_input;
-    TitledComponent m_mask;
-    TitledComponent m_output;
+private:
+    juce::String m_title;
+    std::unique_ptr<juce::Component> mp_component;
 };
 
 //-------------------------------------------------------------------------------------------------//

@@ -1,22 +1,40 @@
 #pragma once
 
-#include <ui/image_handler.h>
+//-------------------------------------------------------------------------------------------------//
+
+#include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-class ImageDropView : public juce::Component
+class ImageDropView
+    : public juce::Component
+    , public juce::FileDragAndDropTarget
 {
 public:
-    ImageDropView(const juce::String &title);
-
-    void paint(juce::Graphics &g) override;
-    void resized() override;
+    ImageDropView(std::function<void()> imageUpdatedCb);
 
     juce::StringArray getImages();
 
+    bool isInterestedInFileDrag(const juce::StringArray &files) override;
+    void filesDropped(const juce::StringArray &files, int x, int y) override;
+
+    void paint(juce::Graphics &g) override;
+
+    void fileDragEnter(const juce::StringArray &files, int x, int y) override;
+    void fileDragExit(const juce::StringArray &files) override;
+
 private:
-    juce::String m_title;
-    ImageHandler m_handler;
+    bool isValidType(juce::String file);
+
+    juce::StringArray m_images;
+
+    std::function<void()> m_imageUpdatedCb;
+
+    bool m_hovered{ false };
+
+    std::array<std::string, 3> m_validTypes{ ".png", ".jpeg", ".jpg" };
+
+    std::unique_ptr<juce::Component> mp_imageDisplayer{ nullptr };
 };
 
 //-------------------------------------------------------------------------------------------------//

@@ -4,15 +4,23 @@
 
 //-------------------------------------------------------------------------------------------------//
 
+struct ImageData;
+
+//-------------------------------------------------------------------------------------------------//
+
 class ImageFrame : public juce::Component
 {
 public:
-    ImageFrame(const juce::String &imagePath);
+    ImageFrame() = default;
+    ImageFrame(std::unique_ptr<ImageData> imageData);
 
     void paint(juce::Graphics &g) override;
 
+    void setImage(std::unique_ptr<ImageData> p_imageData);
+    void reset();
+
 private:
-    juce::String m_imagePath;
+    juce::Image m_image;
 };
 
 //-------------------------------------------------------------------------------------------------//
