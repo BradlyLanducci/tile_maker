@@ -1,11 +1,11 @@
 #include <ui/components/image_color_picker.h>
 #include <juce_gui_extra/juce_gui_extra.h>
+#include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageColorPicker::ImageColorPicker(const juce::String &imageName, juce::Colour defaultColour)
-    : m_imageName(imageName)
-    , m_colour(defaultColour)
+ImageColorPicker::ImageColorPicker(juce::ValueTree tree)
+    : m_tree(tree)
 {
 }
 
@@ -13,7 +13,9 @@ ImageColorPicker::ImageColorPicker(const juce::String &imageName, juce::Colour d
 
 void ImageColorPicker::paint(juce::Graphics &g)
 {
-    g.setColour(m_colour);
+    auto colour{ juce::Colour::fromString(
+        m_tree.getProperty(Theme::COLOUR_KEY, juce::Colours::black.toString()).toString()) };
+    g.setColour(colour);
     auto bounds{ getLocalBounds().removeFromRight(50) };
     bounds.reduce(4, 4);
     auto sideLength{ std::min(bounds.getWidth(), bounds.getHeight()) };
@@ -41,7 +43,7 @@ void ImageColorPicker::changeListenerCallback(juce::ChangeBroadcaster *source)
     auto colourSelector{ static_cast<juce::ColourSelector *>(source) };
     if (colourSelector)
     {
-        m_colour = colourSelector->getCurrentColour();
+        m_tree.setProperty(Theme::COLOUR_KEY, colourSelector->getCurrentColour().toString(), nullptr);
         repaint();
     }
 }

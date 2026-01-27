@@ -7,14 +7,14 @@
 class FileListModel : public juce::ListBoxModel
 {
 public:
-    FileListModel(const juce::StringArray &images);
+    FileListModel(juce::ValueTree tree);
 
     int getNumRows() override;
     void paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) override;
 
 private:
     void getFilenameFromPath();
-    juce::StringArray m_images;
+    juce::ValueTree m_tree;
 };
 
 //-------------------------------------------------------------------------------------------------//

@@ -7,7 +7,7 @@
 class MappedFileListModel : public juce::ListBoxModel
 {
 public:
-    MappedFileListModel(const juce::StringArray &images);
+    MappedFileListModel(juce::ValueTree tree);
 
     int getNumRows() override;
     void paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected) override;
@@ -17,7 +17,7 @@ public:
 
 private:
     void getFilenameFromPath();
-    juce::StringArray m_images;
+    juce::ValueTree m_tree;
 };
 
 //-------------------------------------------------------------------------------------------------//

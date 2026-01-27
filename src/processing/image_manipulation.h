@@ -11,10 +11,10 @@ public:
     static std::unique_ptr<ImageData> createMaskedImage(const ImageData &in, const ImageData &mask);
 
     /// @brief Creates all path variants from provided input and path textures
-    /// @param a Texture A
-    /// @param b Texture B
+    /// @param inputs Vector of colours mapped to image data
     /// @param tmp Template texture
-    static std::unique_ptr<ImageData> blendABFromTemplate(const ImageData &a, const ImageData &b, const ImageData &tmp);
+    static std::unique_ptr<ImageData> blendInputsFromTemplate(const std::vector<ColourMappedImageData> &inputs,
+                                                              const std::vector<ImageData> &templates);
 };
 
 //-------------------------------------------------------------------------------------------------//

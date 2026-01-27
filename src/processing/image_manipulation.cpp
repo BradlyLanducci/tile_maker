@@ -16,11 +16,6 @@
 
 std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData &in, const ImageData &mask)
 {
-    if (in.filename == ".gitkeep" || mask.filename == ".gitkeep")
-    {
-        return nullptr;
-    }
-
     if (in.width != mask.width || in.height != mask.height || in.channels != mask.channels)
     {
         return nullptr;
@@ -49,68 +44,71 @@ std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData 
 
 //-------------------------------------------------------------------------------------------------//
 
-std::unique_ptr<ImageData> ImageManipulation::blendABFromTemplate(const ImageData &aImageData,
-                                                                  const ImageData &bImageData,
-                                                                  const ImageData &tmpImageData)
+std::unique_ptr<ImageData> ImageManipulation::blendInputsFromTemplate(const std::vector<ColourMappedImageData> &inputs,
+                                                                      const std::vector<ImageData> &templates)
 {
-    if (aImageData.filename[0] == '.' || bImageData.filename[0] == '.' || tmpImageData.filename[0] == '.')
+    if (inputs.empty() || templates.empty())
     {
         return nullptr;
     }
 
-    ASSERT((aImageData.channels == aImageData.channels) && (aImageData.channels == tmpImageData.channels),
-           "All images must have the same amount of channels");
-    ASSERT(tmpImageData.width % aImageData.width == 0, "Mask sheet must be multiple of aImageData");
-    ASSERT(aImageData.width == bImageData.width, "aImageData and b images must have the same width");
-    ASSERT((aImageData.channels == bImageData.channels) && (aImageData.channels == tmpImageData.channels),
-           "All images must have the same height");
-
-    std::unique_ptr<ImageData> p_output{ std::make_unique<ImageData>(tmpImageData.width, tmpImageData.height,
-                                                                     tmpImageData.channels) };
-
-    uint32_t aWidth{ (uint32_t)aImageData.width };
-    uint32_t height{ (uint32_t)aImageData.height };
-
-    uint32_t numTiles{ tmpImageData.width / aWidth };
-    for (uint32_t t = 0; t < numTiles; t++)
+    // Verify that all sizes are correct
+    uint32_t inWidth{ (uint32_t)inputs[0].p_imageData->width };
+    uint32_t tempWidth{ (uint32_t)templates[0].width };
+    uint32_t height{ (uint32_t)inputs[0].p_imageData->height };
+    for (const auto &input : inputs)
     {
-        for (uint32_t y = 0; y < height; y++)
+        if (input.p_imageData->width != inWidth || input.p_imageData->height != height)
         {
-            for (uint32_t x = 0; x < aWidth; x++)
+            return nullptr;
+        }
+    }
+
+    for (const auto &temp : templates)
+    {
+        if (temp.width != tempWidth || temp.height != height)
+        {
+            return nullptr;
+        }
+    }
+
+    std::unique_ptr<ImageData> p_output{ std::make_unique<ImageData>(templates[0].width, templates[0].height,
+                                                                     templates[0].channels) };
+
+    for (const auto &temp : templates)
+    {
+        uint32_t numTiles{ templates[0].width / inWidth };
+        for (uint32_t t = 0; t < numTiles; t++)
+        {
+            for (uint32_t y = 0; y < height; y++)
             {
-                uint32_t aPixelOffsetBytes{ (y * aWidth + x) * aImageData.channels };
-                uint32_t maskPixelOffset{ (y * tmpImageData.width + x + (t * aWidth)) * tmpImageData.channels };
-
-                uint8_t r{ *(tmpImageData.p_data + maskPixelOffset) };
-                uint8_t g{ *(tmpImageData.p_data + maskPixelOffset + 1) };
-                uint8_t b{ *(tmpImageData.p_data + maskPixelOffset + 2) };
-                bool isMask{ r == 0 && g == 0 && b == 0 };
-
-                uint8_t *tileDataToUse{};
-                if (isMask)
+                for (uint32_t x = 0; x < inWidth; x++)
                 {
-                    tileDataToUse = aImageData.p_data;
-                }
-                else
-                {
-                    tileDataToUse = bImageData.p_data;
-                }
+                    uint32_t inputOffsetBytes{ (y * inWidth + x) * temp.channels };
+                    uint32_t outputOffsetBytes{ (y * temp.width + x + (t * inWidth)) * temp.channels };
 
-                if (maskPixelOffset < (tmpImageData.width * tmpImageData.height * tmpImageData.channels))
-                {
-                    p_output->p_data[maskPixelOffset] = tileDataToUse[aPixelOffsetBytes];
-                    p_output->p_data[maskPixelOffset + 1] = tileDataToUse[aPixelOffsetBytes + 1];
-                    p_output->p_data[maskPixelOffset + 2] = tileDataToUse[aPixelOffsetBytes + 2];
-                    p_output->p_data[maskPixelOffset + 3] = tileDataToUse[aPixelOffsetBytes + 3];
+                    uint8_t r{ *(temp.p_data + outputOffsetBytes) };
+                    uint8_t g{ *(temp.p_data + outputOffsetBytes + 1) };
+                    uint8_t b{ *(temp.p_data + outputOffsetBytes + 2) };
+
+                    uint8_t *tileDataToUse{ nullptr };
+                    for (const auto &input : inputs)
+                    {
+                        if (input.colour == juce::Colour(r, g, b))
+                        {
+                            tileDataToUse = input.p_imageData->p_data;
+                            break;
+                        }
+                    }
+
+                    if (tileDataToUse && outputOffsetBytes < (p_output->width * p_output->height * p_output->channels))
+                    {
+                        std::memcpy(p_output->p_data + outputOffsetBytes, tileDataToUse + inputOffsetBytes,
+                                    p_output->channels);
+                    }
                 }
             }
         }
-    }
-    std::string baseOutputDir{ OUTPUT_DIR + "/" + aImageData.filename + "/" };
-
-    if (!std::filesystem::exists(baseOutputDir))
-    {
-        std::filesystem::create_directory(baseOutputDir);
     }
 
     return std::move(p_output);

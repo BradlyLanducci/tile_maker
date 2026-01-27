@@ -7,7 +7,9 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-class Blender : public juce::Component
+class Blender
+    : public juce::Component
+    , public juce::ValueTree::Listener
 {
 public:
     Blender();
@@ -15,12 +17,16 @@ public:
     void resized() override;
 
 private:
-    std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, const juce::StringArray &files);
+    std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, juce::ValueTree tree);
 
-    TitledComponent m_inputsA;
-    TitledComponent m_inputsB;
-    TitledComponent m_template;
+    void valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged,
+                                  const juce::Identifier &property) override;
+
+    juce::ValueTree m_tree;
+
     TitledComponent m_output;
+    std::unique_ptr<TitledComponent> mp_inputs;
+    std::unique_ptr<TitledComponent> mp_templates;
 };
 
 //-------------------------------------------------------------------------------------------------//

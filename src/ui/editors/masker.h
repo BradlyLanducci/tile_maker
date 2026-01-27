@@ -15,11 +15,13 @@ public:
     void resized() override;
 
 private:
-    std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, const juce::StringArray &files);
+    std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, juce::ValueTree tree);
 
-    TitledComponent m_input;
-    TitledComponent m_mask;
+    juce::ValueTree m_tree;
+
     TitledComponent m_output;
+    std::unique_ptr<TitledComponent> mp_input;
+    std::unique_ptr<TitledComponent> mp_mask;
 };
 
 //-------------------------------------------------------------------------------------------------//

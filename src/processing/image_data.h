@@ -1,15 +1,9 @@
 #pragma once
 
+#include <juce_gui_basics/juce_gui_basics.h>
 #include <cstdint>
 #include <filesystem>
 #include <string>
-
-//-------------------------------------------------------------------------------------------------//
-
-constexpr uint32_t DESIRED_CHANNELS{ 4 };
-const std::string INPUT_DIR{ "input" };
-const std::string OUTPUT_DIR{ "output" };
-const std::string TEMPLATE_DIR{ "templates" };
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -26,6 +20,20 @@ struct ImageData
     int channels{};
     uint8_t *p_data{ nullptr };
     std::string filename{};
+};
+
+//-------------------------------------------------------------------------------------------------//
+
+struct ColourMappedImageData
+{
+    ColourMappedImageData(juce::Colour mappedColour, std::unique_ptr<ImageData> p_mappedImageData)
+        : colour(mappedColour)
+        , p_imageData(std::move(p_mappedImageData))
+    {
+    }
+
+    juce::Colour colour;
+    std::unique_ptr<ImageData> p_imageData{ nullptr };
 };
 
 //-------------------------------------------------------------------------------------------------//

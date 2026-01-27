@@ -2,20 +2,22 @@
 
 //-------------------------------------------------------------------------------------------------//
 
+#include <ui/components/image_list.h>
+
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-using FactoryCallback = std::function<std::unique_ptr<juce::Component>(juce::Component *, juce::StringArray)>;
+using FactoryCallback = std::function<std::unique_ptr<juce::Component>(juce::Component *, juce::ValueTree)>;
 
 class ImageDropView
     : public juce::Component
     , public juce::FileDragAndDropTarget
 {
 public:
-    ImageDropView(FactoryCallback factoryCb);
+    ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb);
 
-    juce::StringArray getImages();
+    juce::ValueTree getImages();
 
     bool isInterestedInFileDrag(const juce::StringArray &files) override;
     void filesDropped(const juce::StringArray &files, int x, int y) override;
@@ -37,6 +39,8 @@ private:
     std::array<std::string, 3> m_validTypes{ ".png", ".jpeg", ".jpg" };
 
     std::unique_ptr<juce::Component> mp_imageDisplayer{ nullptr };
+
+    juce::ValueTree m_tree;
 };
 
 //-------------------------------------------------------------------------------------------------//

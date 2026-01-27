@@ -1,10 +1,11 @@
 #include <ui/models/mapped_file_list_model.h>
 #include <ui/components/image_color_picker.h>
+#include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-MappedFileListModel::MappedFileListModel(const juce::StringArray &images)
-    : m_images(images)
+MappedFileListModel::MappedFileListModel(juce::ValueTree tree)
+    : m_tree(tree)
 {
 }
 
@@ -12,7 +13,7 @@ MappedFileListModel::MappedFileListModel(const juce::StringArray &images)
 
 int MappedFileListModel::getNumRows()
 {
-    return m_images.size();
+    return m_tree.getNumChildren();
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -23,9 +24,10 @@ void MappedFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g, int
 
     g.fillAll(juce::Colours::transparentBlack);
 
-    if (rowNumber < m_images.size())
+    if (rowNumber < getNumRows())
     {
-        juce::File file{ m_images[rowNumber] };
+        juce::ValueTree child{ m_tree.getChild(rowNumber) };
+        juce::File file{ child.getType().toString() };
         juce::String fileName{ file.getFileNameWithoutExtension().replace("_", " ") };
         g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
     }
@@ -40,15 +42,20 @@ juce::Component *MappedFileListModel::refreshComponentForRow(int rowNumber, bool
 
     if (!p_existingComponentToUpdate)
     {
-        // This should be impossible
-        jassert(m_images.size() >= 2);
-
-        uint8_t numColours{ static_cast<uint8_t>(m_images.size() - 1) };
+        uint8_t numColours{ static_cast<uint8_t>(getNumRows() == 1 ? 1 : getNumRows() - 1) };
         uint8_t colourStep{ static_cast<uint8_t>(0xFF / numColours) };
         uint8_t colourValue{ static_cast<uint8_t>(rowNumber * colourStep) };
         juce::Colour defaultColour{ colourValue, colourValue, colourValue };
         // Greyscale
-        p_existingComponentToUpdate = new ImageColorPicker(m_images[rowNumber], defaultColour);
+        juce::ValueTree child{ m_tree.getChild(rowNumber) };
+
+        if (child.isValid())
+        {
+            juce::String fileName{ child.getType().toString() };
+            child.setProperty(Theme::COLOUR_KEY, defaultColour.toString(), nullptr);
+
+            p_existingComponentToUpdate = new ImageColorPicker(child);
+        }
     }
 
     return p_existingComponentToUpdate;

@@ -1,9 +1,10 @@
 #include <ui/models/file_list_model.h>
+#include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-FileListModel::FileListModel(const juce::StringArray &images)
-    : m_images(images)
+FileListModel::FileListModel(juce::ValueTree tree)
+    : m_tree(tree)
 {
 }
 
@@ -11,7 +12,7 @@ FileListModel::FileListModel(const juce::StringArray &images)
 
 int FileListModel::getNumRows()
 {
-    return m_images.size();
+    return m_tree.getNumChildren();
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -22,11 +23,16 @@ void FileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g, int width
 
     g.fillAll(juce::Colours::transparentBlack);
 
-    if (rowNumber < m_images.size())
+    if (rowNumber < getNumRows())
     {
-        juce::File file{ m_images[rowNumber] };
+        juce::ValueTree child{ m_tree.getChild(rowNumber) };
+        juce::File file{ child.getType().toString() };
         juce::String fileName{ file.getFileNameWithoutExtension().replace("_", " ") };
         g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
+        if (child.isValid())
+        {
+            child.setProperty(Theme::FORCE_UPDATE, Theme::FORCE_UPDATE.toString(), nullptr);
+        }
     }
 }
 

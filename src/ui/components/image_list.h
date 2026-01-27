@@ -7,8 +7,8 @@
 template <typename ModelType> class ImageList : public juce::Component
 {
 public:
-    ImageList(const juce::StringArray &images)
-        : m_model(images)
+    ImageList(juce::ValueTree tree)
+        : m_model(tree)
         , m_list("images", &m_model)
     {
         m_list.setColour(juce::ListBox::ColourIds::backgroundColourId, juce::Colours::transparentBlack);

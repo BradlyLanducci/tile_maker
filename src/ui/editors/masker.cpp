@@ -7,55 +7,53 @@
 //-------------------------------------------------------------------------------------------------//
 
 Masker::Masker()
-    : m_input("Input", new ImageDropView([this](juce::Component *p_caller, const juce::StringArray &files)
-                                         { return imagesUpdated(p_caller, files); }))
-    , m_mask("Mask", new ImageDropView([this](juce::Component *p_caller, const juce::StringArray &files)
-                                       { return imagesUpdated(p_caller, files); }))
+    : m_tree{ "root" }
     , m_output("Output", new ImageFrame())
 {
-    addAndMakeVisible(m_input);
-    addAndMakeVisible(m_mask);
+    juce::ValueTree inputTree{ "Inputs" };
+    juce::ValueTree maskTree{ "Masks" };
+
+    m_tree.appendChild(inputTree, nullptr);
+    m_tree.appendChild(maskTree, nullptr);
+
+    mp_input = std::make_unique<TitledComponent>(
+        "Inputs", new ImageDropView(inputTree, [this](juce::Component *p_caller, juce::ValueTree tree)
+                                    { return imagesUpdated(p_caller, tree); }));
+    mp_mask = std::make_unique<TitledComponent>(
+        "Masks", new ImageDropView(maskTree, [this](juce::Component *p_caller, juce::ValueTree tree)
+                                   { return imagesUpdated(p_caller, tree); }));
+
+    addAndMakeVisible(*mp_input);
+    addAndMakeVisible(*mp_mask);
     addAndMakeVisible(m_output);
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-std::unique_ptr<juce::Component> Masker::imagesUpdated(juce::Component *p_caller, const juce::StringArray &files)
+std::unique_ptr<juce::Component> Masker::imagesUpdated(juce::Component *p_caller, juce::ValueTree tree)
 {
     (void)p_caller;
 
-    std::unique_ptr<juce::Component> p_imageDisplayer{ nullptr };
-    if (files.size() == 1)
-    {
-        std::unique_ptr<ImageData> imageData{ std::make_unique<ImageData>(files[0].toStdString()) };
-        p_imageDisplayer = std::make_unique<ImageFrame>(std::move(imageData));
-    }
-    else
-    {
-        p_imageDisplayer = std::make_unique<ImageList<FileListModel>>(files);
-    }
-
-    juce::StringArray inImages{ m_input.getComponent<ImageDropView>()->getImages() };
-    juce::StringArray maskImages{ m_mask.getComponent<ImageDropView>()->getImages() };
+    juce::ValueTree inputTree{ m_tree.getChildWithName("Inputs") };
+    juce::ValueTree maskTree{ m_tree.getChildWithName("Masks") };
 
     ImageFrame *p_output{ m_output.getComponent<ImageFrame>() };
-    if (inImages.isEmpty() || maskImages.isEmpty())
-    {
-        p_output->reset();
-    }
 
-    for (const auto &inImage : inImages)
+    p_output->reset();
+
+    for (const auto &inImage : inputTree)
     {
-        for (const auto &maskImage : maskImages)
+        for (const auto &maskImage : maskTree)
         {
-            ImageData in{ inImage.toStdString() };
-            ImageData mask{ maskImage.toStdString() };
+            ImageData in{ inImage.getType().toString().toStdString() };
+            ImageData mask{ maskImage.getType().toString().toStdString() };
             std::unique_ptr<ImageData> out{ ImageManipulation::createMaskedImage(in, mask) };
             p_output->setImage(std::move(out));
+            break; // REMOVE THIS
         }
     }
 
-    return std::move(p_imageDisplayer);
+    return std::make_unique<ImageList<FileListModel>>(tree);
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -81,8 +79,8 @@ void Masker::resized()
     int sideLength{ std::min(left.getWidth(), left.getHeight()) };
 
     int centeredHeight{ (bounds.getHeight() - sideLength) / 2 };
-    m_input.setBounds(left.getX(), centeredHeight, sideLength, sideLength);
-    m_mask.setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
+    mp_input->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
+    mp_mask->setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
     m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
 }
 

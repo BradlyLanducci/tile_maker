@@ -13,7 +13,8 @@ ImageFrame::ImageFrame(std::unique_ptr<ImageData> imageData)
 
 void ImageFrame::paint(juce::Graphics &g)
 {
-    g.drawImage(m_image, getLocalBounds().toFloat());
+    g.drawImage(m_image, getLocalBounds().toFloat(),
+                juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
 }
 
 //-------------------------------------------------------------------------------------------------//

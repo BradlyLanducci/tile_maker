@@ -9,7 +9,7 @@ class ImageColorPicker
     , public juce::ChangeListener
 {
 public:
-    ImageColorPicker(const juce::String &imageName, juce::Colour defaultColour = juce::Colours::black);
+    ImageColorPicker(juce::ValueTree tree);
 
     void paint(juce::Graphics &g) override;
 
@@ -18,8 +18,7 @@ public:
     void changeListenerCallback(juce::ChangeBroadcaster *source) override;
 
 private:
-    juce::String m_imageName;
-    juce::Colour m_colour;
+    juce::ValueTree m_tree;
 };
 
 //-------------------------------------------------------------------------------------------------//

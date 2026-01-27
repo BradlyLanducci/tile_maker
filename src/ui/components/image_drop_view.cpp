@@ -8,8 +8,10 @@ const float HOVER_ALPHA{ 0.75f };
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageDropView::ImageDropView(FactoryCallback factoryCb)
+ImageDropView::ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb)
     : m_factoryCb(factoryCb)
+    , m_tree(tree)
+
 {
 }
 
@@ -61,9 +63,9 @@ void ImageDropView::fileDragExit(const juce::StringArray &)
 
 //-------------------------------------------------------------------------------------------------//
 
-juce::StringArray ImageDropView::getImages()
+juce::ValueTree ImageDropView::getImages()
 {
-    return m_images;
+    return m_tree;
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -92,7 +94,16 @@ void ImageDropView::filesDropped(const juce::StringArray &files, int x, int y)
 
     auto bounds{ getBounds() };
 
-    mp_imageDisplayer = m_factoryCb(this, files);
+    m_tree.removeAllChildren(nullptr);
+
+    for (const auto &file : files)
+    {
+        juce::Identifier id{ juce::Identifier(file) };
+        juce::ValueTree subTree{ id };
+        m_tree.appendChild(subTree, nullptr);
+    }
+
+    mp_imageDisplayer = m_factoryCb(this, m_tree);
     if (mp_imageDisplayer)
     {
         mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());

@@ -36,7 +36,7 @@ MainContent::MainContent()
         }
     };
 
-    m_editorSelector.setSelectedId((int)EditorType::Masker);
+    m_editorSelector.setSelectedId((int)EditorType::Blender);
 }
 
 //-------------------------------------------------------------------------------------------------//

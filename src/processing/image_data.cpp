@@ -12,6 +12,10 @@
 
 //-------------------------------------------------------------------------------------------------//
 
+constexpr uint32_t DESIRED_CHANNELS{ 4 };
+
+//-------------------------------------------------------------------------------------------------//
+
 ImageData::ImageData(int imageWidth, int imageHeight, int imageChannels)
     : width(imageWidth)
     , height(imageHeight)
