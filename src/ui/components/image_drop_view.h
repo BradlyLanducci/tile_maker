@@ -10,12 +10,12 @@
 
 using FactoryCallback = std::function<std::unique_ptr<juce::Component>(juce::Component *, juce::ValueTree)>;
 
-class ImageDropView
+class ImageDropView final
     : public juce::Component
     , public juce::FileDragAndDropTarget
 {
 public:
-    ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb);
+    explicit ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb);
 
     juce::ValueTree getImages();
 

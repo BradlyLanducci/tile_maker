@@ -4,21 +4,17 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-class ImageColorPicker final
-    : public juce::Component
-    , public juce::ChangeListener
+class DirectoryChooser final : public juce::Component
 {
 public:
-    explicit ImageColorPicker(juce::ValueTree tree);
+    DirectoryChooser();
 
     void paint(juce::Graphics &g) override;
-
-    void mouseUp(const juce::MouseEvent &event) override;
-
-    void changeListenerCallback(juce::ChangeBroadcaster *source) override;
+    void resized() override;
 
 private:
-    juce::ValueTree m_tree;
+    juce::TextButton m_button;
+    juce::FileChooser m_chooser;
 };
 
 //-------------------------------------------------------------------------------------------------//

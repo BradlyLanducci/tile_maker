@@ -4,10 +4,10 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-template <typename ModelType> class ImageList : public juce::Component
+template <typename ModelType> class ImageList final : public juce::Component
 {
 public:
-    ImageList(juce::ValueTree tree)
+    explicit ImageList(juce::ValueTree tree)
         : m_model(tree)
         , m_list("images", &m_model)
     {

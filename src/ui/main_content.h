@@ -1,5 +1,8 @@
 #pragma once
 
+#include <ui/components/top_bar.h>
+#include <ui/components/directory_chooser.h>
+
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -12,15 +15,13 @@ public:
     void resized() override;
 
 private:
-    enum class EditorType : uint32_t
-    {
-        None = 0,
-        Masker = 1,
-        Blender = 2
-    };
+    void topBarSelectionChanged(Theme::EditorType type);
 
-    juce::ComboBox m_editorSelector;
+    TopBar m_topBar;
     std::unique_ptr<juce::Component> mp_editor{ nullptr };
+
+    DirectoryChooser m_directoryChooser;
+    juce::TextButton m_generate;
 };
 
 //-------------------------------------------------------------------------------------------------//

@@ -1,32 +1,29 @@
 #pragma once
 
+#include <ui/utilities/theme.h>
+
 #include <juce_gui_basics/juce_gui_basics.h>
+#include <functional>
 
 //-------------------------------------------------------------------------------------------------//
 
-struct ImageData;
+using SelectedCallback = std::function<void(Theme::EditorType)>;
 
 //-------------------------------------------------------------------------------------------------//
 
-class ImageFrame final : public juce::Component
+class TopBar final : public juce::Component
 {
 public:
-    ImageFrame() = default;
-    ImageFrame(std::unique_ptr<ImageData> p_imageData);
+    explicit TopBar(SelectedCallback selectedCb);
 
     void paint(juce::Graphics &g) override;
-
-    void setImage(std::unique_ptr<ImageData> p_imageData);
-    void reset();
+    void resized() override;
 
 private:
-    // Converts stbi RGBA to JUCE ARGB
-    void RGBAToARGB(ImageData *p_imageData);
-
-    // Converts stbi RGB to JUCE RGB
-    void RGBToRGB(ImageData *p_imageData);
-
-    juce::Image m_image;
+    juce::FlexBox m_hBox;
+    std::vector<juce::FlexItem> m_flexItems;
+    std::vector<std::unique_ptr<juce::Component>> m_buttons;
+    SelectedCallback m_selectedCb{ nullptr };
 };
 
 //-------------------------------------------------------------------------------------------------//

@@ -7,7 +7,7 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-class Masker : public juce::Component
+class Masker final : public juce::Component
 {
 public:
     Masker();

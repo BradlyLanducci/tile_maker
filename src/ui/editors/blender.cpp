@@ -57,6 +57,9 @@ std::unique_ptr<juce::Component> Blender::imagesUpdated(juce::Component *p_calle
 
 void Blender::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property)
 {
+    (void)treeWhosePropertyHasChanged;
+    (void)property;
+
     juce::ValueTree inputTree{ m_tree.getChildWithName("Inputs") };
     juce::ValueTree templatesTree{ m_tree.getChildWithName("Templates") };
 

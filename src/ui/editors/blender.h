@@ -7,7 +7,7 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-class Blender
+class Blender final
     : public juce::Component
     , public juce::ValueTree::Listener
 {

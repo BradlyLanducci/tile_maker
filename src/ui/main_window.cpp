@@ -5,10 +5,14 @@
 MainWindow::MainWindow(juce::String name)
     : DocumentWindow(name, juce::Colours::lightgrey, DocumentWindow::allButtons)
 {
-    centreWithSize(300, 200);
     setVisible(true);
 
     setContentOwned(&m_content, true);
+    setResizable(true, true);
+    getConstrainer()->setFixedAspectRatio(16.0 / 9.0);
+    setResizeLimits(1920 / 4, 1080 / 4, 1920 * 2, 1080 * 2);
+
+    m_content.setBounds(0, 0, 1440, 810);
 }
 
 //-------------------------------------------------------------------------------------------------//
