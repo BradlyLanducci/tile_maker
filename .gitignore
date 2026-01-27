@@ -1,6 +1,3 @@
 build
-input/*
-output/*
-templates/*
 .vscode
 CMakeUserPresets.json
