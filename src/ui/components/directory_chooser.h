@@ -12,9 +12,12 @@ public:
     void paint(juce::Graphics &g) override;
     void resized() override;
 
+    juce::String getOutputDirectory() const;
+
 private:
     juce::TextButton m_button;
     juce::FileChooser m_chooser;
+    juce::String m_selectedDirectory;
 };
 
 //-------------------------------------------------------------------------------------------------//

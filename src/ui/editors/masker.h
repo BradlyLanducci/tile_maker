@@ -2,17 +2,18 @@
 
 #include <ui/components/image_drop_view.h>
 #include <ui/components/titled_component.h>
-
-#include <juce_gui_basics/juce_gui_basics.h>
+#include <ui/editors/editor.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-class Masker final : public juce::Component
+class Masker final : public Editor
 {
 public:
     Masker();
 
     void resized() override;
+
+    void generate(const juce::String &baseOutputDirectory) override;
 
 private:
     std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, juce::ValueTree tree);

@@ -63,13 +63,6 @@ void ImageDropView::fileDragExit(const juce::StringArray &)
 
 //-------------------------------------------------------------------------------------------------//
 
-juce::ValueTree ImageDropView::getImages()
-{
-    return m_tree;
-}
-
-//-------------------------------------------------------------------------------------------------//
-
 bool ImageDropView::isInterestedInFileDrag(const juce::StringArray &files)
 {
     for (const auto &file : files)

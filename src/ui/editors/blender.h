@@ -2,19 +2,20 @@
 
 #include <ui/components/image_drop_view.h>
 #include <ui/components/titled_component.h>
-
-#include <juce_gui_basics/juce_gui_basics.h>
+#include <ui/editors/editor.h>
 
 //-------------------------------------------------------------------------------------------------//
 
 class Blender final
-    : public juce::Component
+    : public Editor
     , public juce::ValueTree::Listener
 {
 public:
     Blender();
 
     void resized() override;
+
+    void generate(const juce::String &baseOutputDirectory) override;
 
 private:
     std::unique_ptr<juce::Component> imagesUpdated(juce::Component *p_caller, juce::ValueTree tree);

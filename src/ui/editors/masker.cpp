@@ -3,6 +3,7 @@
 #include <ui/components/image_frame.h>
 #include <ui/models/file_list_model.h>
 #include <ui/components/image_list.h>
+#include "masker.h"
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -47,9 +48,12 @@ std::unique_ptr<juce::Component> Masker::imagesUpdated(juce::Component *p_caller
         {
             ImageData in{ inImage.getType().toString().toStdString() };
             ImageData mask{ maskImage.getType().toString().toStdString() };
-            std::unique_ptr<ImageData> out{ ImageManipulation::createMaskedImage(in, mask) };
-            p_output->setImage(std::move(out));
-            break; // REMOVE THIS
+            std::unique_ptr<ImageData> p_maskedImage{ ImageManipulation::createMaskedImage(in, mask) };
+            if (p_maskedImage)
+            {
+                p_output->setImage(std::move(p_maskedImage));
+                break; // REMOVE THIS IT'S SHOULD ONLY DO FOR THE SELECTED IMAGES (not implemented yet)
+            }
         }
     }
 
@@ -82,6 +86,13 @@ void Masker::resized()
     mp_input->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
     mp_mask->setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
     m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
+}
+
+//-------------------------------------------------------------------------------------------------//
+
+void Masker::generate(const juce::String &baseOutputDirectory)
+{
+    (void)baseOutputDirectory;
 }
 
 //-------------------------------------------------------------------------------------------------//

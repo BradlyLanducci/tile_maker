@@ -12,7 +12,7 @@ public:
     void paint(juce::Graphics &g) override;
     void resized() override;
 
-    template <typename ComponentType> ComponentType *getComponent()
+    template <typename ComponentType> ComponentType *getComponent() const
     {
         return static_cast<ComponentType *>(mp_component.get());
     }

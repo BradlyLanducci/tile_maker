@@ -14,6 +14,7 @@ DirectoryChooser::DirectoryChooser()
                               [this](const juce::FileChooser &fc)
                               {
                                   juce::File selectedDirectory{ fc.getResult() };
+                                  m_selectedDirectory = selectedDirectory.getFullPathName();
                                   m_button.setButtonText(selectedDirectory.getFileName());
                               });
     };
@@ -32,6 +33,12 @@ void DirectoryChooser::resized()
 {
     auto bounds{ getLocalBounds() };
     m_button.setBounds(bounds.removeFromBottom(bounds.getHeight() - 25));
+}
+//-------------------------------------------------------------------------------------------------//
+
+juce::String DirectoryChooser::getOutputDirectory() const
+{
+    return m_selectedDirectory;
 }
 
 //-------------------------------------------------------------------------------------------------//

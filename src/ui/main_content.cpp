@@ -15,7 +15,13 @@ MainContent::MainContent()
     addAndMakeVisible(m_directoryChooser);
     addAndMakeVisible(m_generate);
 
-    m_generate.onClick = [this]() {};
+    m_generate.onClick = [this]()
+    {
+        if (mp_editor)
+        {
+            mp_editor->generate(m_directoryChooser.getOutputDirectory());
+        }
+    };
 }
 
 //-------------------------------------------------------------------------------------------------//

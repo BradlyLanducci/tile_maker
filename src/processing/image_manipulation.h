@@ -1,3 +1,5 @@
+#pragma once
+
 #include <processing/image_data.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -13,8 +15,8 @@ public:
     /// @brief Creates all path variants from provided input and path textures
     /// @param inputs Vector of colours mapped to image data
     /// @param tmp Template texture
-    static std::unique_ptr<ImageData> blendInputsFromTemplate(const std::vector<ColourMappedImageData> &inputs,
-                                                              const std::vector<ImageData> &templates);
+    static std::unique_ptr<ImageData> blendInputsWithTemplate(const std::vector<ColourMappedImageData> &inputs,
+                                                              ImageData &temp);
 };
 
 //-------------------------------------------------------------------------------------------------//

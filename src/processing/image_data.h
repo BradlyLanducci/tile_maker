@@ -13,13 +13,15 @@ struct ImageData
     ImageData(std::filesystem::path path);
     ~ImageData();
 
-    uint32_t getSizeBytes();
+    uint32_t getSizeBytes() const;
+    void writeToDisk();
 
     int width{};
     int height{};
     int channels{};
     uint8_t *p_data{ nullptr };
-    std::string filename{};
+    std::string filepath;
+    std::string filename;
 };
 
 //-------------------------------------------------------------------------------------------------//

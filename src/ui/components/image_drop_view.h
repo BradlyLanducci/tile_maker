@@ -17,8 +17,6 @@ class ImageDropView final
 public:
     explicit ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb);
 
-    juce::ValueTree getImages();
-
     bool isInterestedInFileDrag(const juce::StringArray &files) override;
     void filesDropped(const juce::StringArray &files, int x, int y) override;
 

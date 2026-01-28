@@ -73,7 +73,6 @@ void Blender::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChan
     p_output->reset();
 
     std::vector<ColourMappedImageData> mappedImageData;
-    std::vector<ImageData> templateImageData;
 
     for (const auto &inImage : inputTree)
     {
@@ -86,13 +85,15 @@ void Blender::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChan
     for (const auto &templateImage : templatesTree)
     {
         juce::String templateFile{ templateImage.getType().toString() };
-        templateImageData.emplace_back(templateFile.toStdString());
-    }
+        ImageData templateImageData{ templateFile.toStdString() };
+        std::unique_ptr<ImageData> p_out{ ImageManipulation::blendInputsWithTemplate(mappedImageData,
+                                                                                     templateImageData) };
 
-    std::unique_ptr<ImageData> p_out{ ImageManipulation::blendInputsFromTemplate(mappedImageData, templateImageData) };
-    if (p_out)
-    {
-        p_output->setImage(std::move(p_out));
+        // This should be changed to just effect the selected image
+        if (p_out)
+        {
+            p_output->setImage(std::move(p_out));
+        }
     }
 }
 
@@ -122,6 +123,49 @@ void Blender::resized()
     mp_inputs->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
     mp_templates->setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
     m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
+}
+
+//-------------------------------------------------------------------------------------------------//
+
+void Blender::generate(const juce::String &baseOutputDirectory)
+{
+    juce::ValueTree inputTree{ m_tree.getChildWithName("Inputs") };
+    juce::ValueTree templatesTree{ m_tree.getChildWithName("Templates") };
+
+    if (inputTree.getNumChildren() == 0 || templatesTree.getNumChildren() == 0)
+    {
+        return;
+    }
+
+    ImageFrame *p_output{ m_output.getComponent<ImageFrame>() };
+
+    p_output->reset();
+
+    std::vector<ColourMappedImageData> mappedImageData;
+
+    for (const auto &inImage : inputTree)
+    {
+        juce::Colour inColor{ juce::Colour::fromString(
+            inImage.getProperty(Theme::COLOUR_KEY, juce::Colours::black.toString()).toString()) };
+        juce::String inFile{ inImage.getType().toString() };
+        mappedImageData.emplace_back(inColor, std::make_unique<ImageData>(inFile.toStdString()));
+    }
+
+    uint32_t i{};
+    for (const auto &templateImage : templatesTree)
+    {
+        juce::String templateFile{ templateImage.getType().toString() };
+        ImageData templateImageData{ templateFile.toStdString() };
+        std::unique_ptr<ImageData> p_out{ ImageManipulation::blendInputsWithTemplate(mappedImageData,
+                                                                                     templateImageData) };
+
+        p_out->filepath = baseOutputDirectory.toStdString() + "/" + templateImageData.filename + "/";
+        p_out->filename = templateImageData.filename + "_" + std::to_string(i);
+
+        p_out->writeToDisk();
+
+        i++;
+    }
 }
 
 //-------------------------------------------------------------------------------------------------//
