@@ -12,7 +12,8 @@ namespace Theme
     {
         None = 0,
         Masker = 1,
-        Blender = 2
+        Blender = 2,
+        Noiser = 3
     };
 
     constexpr int TITLE_WIDTH{ 100 };

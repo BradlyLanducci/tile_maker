@@ -1,6 +1,7 @@
 #include <ui/main_content.h>
 #include <ui/editors/masker.h>
 #include <ui/editors/blender.h>
+#include <ui/editors/noiser.h>
 #include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -50,7 +51,9 @@ void MainContent::topBarSelectionChanged(Theme::EditorType type)
     case Theme::EditorType::Blender:
         mp_editor = std::make_unique<Blender>();
         break;
-
+    case Theme::EditorType::Noiser:
+        mp_editor = std::make_unique<Noiser>();
+        break;
     case Theme::EditorType::None:
     default:
         return;

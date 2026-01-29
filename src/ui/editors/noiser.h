@@ -4,14 +4,16 @@
 #include <ui/components/titled_component.h>
 #include <ui/editors/editor.h>
 
+#include <fast_noise_lite.h>
+
 //-------------------------------------------------------------------------------------------------//
 
-class Masker final
+class Noiser final
     : public Editor
     , public juce::ValueTree::Listener
 {
 public:
-    Masker();
+    Noiser();
 
     void resized() override;
     void generate(const juce::String &baseOutputDirectory) override;
@@ -22,13 +24,10 @@ private:
     void valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged,
                                   const juce::Identifier &property) override;
 
-    juce::String getSelectedFile(const juce::ValueTree &tree);
-
     juce::ValueTree m_tree;
 
     TitledComponent m_output;
     std::unique_ptr<TitledComponent> mp_inputs;
-    std::unique_ptr<TitledComponent> mp_masks;
 };
 
 //-------------------------------------------------------------------------------------------------//

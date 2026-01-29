@@ -22,14 +22,14 @@ Masker::Masker()
     m_tree.appendChild(inputTree, nullptr);
     m_tree.appendChild(maskTree, nullptr);
 
-    mp_input = std::make_unique<TitledComponent>(
+    mp_inputs = std::make_unique<TitledComponent>(
         "Inputs", std::make_unique<ImageDropView>(inputTree,
                                                   [this](juce::Component *p_caller, juce::ValueTree tree)
                                                   {
                                                       (void)p_caller;
                                                       return dropViewChanged(tree);
                                                   }));
-    mp_mask = std::make_unique<TitledComponent>(
+    mp_masks = std::make_unique<TitledComponent>(
         "Masks", std::make_unique<ImageDropView>(maskTree,
                                                  [this](juce::Component *p_caller, juce::ValueTree tree)
                                                  {
@@ -37,8 +37,8 @@ Masker::Masker()
                                                      return dropViewChanged(tree);
                                                  }));
 
-    addAndMakeVisible(*mp_input);
-    addAndMakeVisible(*mp_mask);
+    addAndMakeVisible(*mp_inputs);
+    addAndMakeVisible(*mp_masks);
     addAndMakeVisible(m_output);
 
     m_tree.addListener(this);
@@ -142,8 +142,8 @@ void Masker::resized()
     int sideLength{ std::min(left.getWidth(), left.getHeight()) };
 
     int centeredHeight{ (bounds.getHeight() - sideLength) / 2 };
-    mp_input->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
-    mp_mask->setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
+    mp_inputs->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
+    mp_masks->setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
     m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
 }
 
