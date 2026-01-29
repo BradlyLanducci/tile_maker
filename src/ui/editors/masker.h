@@ -16,7 +16,7 @@ public:
     void generate(const juce::String &baseOutputDirectory) override;
 
 private:
-    std::unique_ptr<juce::Component> imagesUpdated(juce::ValueTree tree);
+    std::unique_ptr<juce::Component> dropViewChanged(juce::ValueTree tree);
 
     juce::ValueTree m_tree;
 

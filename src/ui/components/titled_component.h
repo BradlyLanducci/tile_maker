@@ -7,7 +7,7 @@
 class TitledComponent final : public juce::Component
 {
 public:
-    explicit TitledComponent(const juce::String &title, juce::Component *p_component);
+    explicit TitledComponent(const juce::String &title, std::unique_ptr<juce::Component> p_component);
 
     void paint(juce::Graphics &g) override;
     void resized() override;

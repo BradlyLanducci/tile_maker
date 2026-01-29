@@ -10,7 +10,7 @@
 
 Blender::Blender()
     : m_tree("root")
-    , m_output("Output", new ImageFrame())
+    , m_output("Output", std::make_unique<ImageFrame>())
 {
     juce::ValueTree inputTree{ "Inputs" };
     juce::ValueTree templatesTree{ "Templates" };
@@ -19,12 +19,13 @@ Blender::Blender()
     m_tree.appendChild(templatesTree, nullptr);
 
     mp_inputs = std::make_unique<TitledComponent>(
-        "Inputs", new ImageDropView(inputTree, [this](juce::Component *p_caller, juce::ValueTree tree)
-                                    { return imagesUpdated(p_caller, tree); }));
+        "Inputs", std::make_unique<ImageDropView>(inputTree, [this](juce::Component *p_caller, juce::ValueTree tree)
+                                                  { return dropViewChanged(p_caller, tree); }));
 
     mp_templates = std::make_unique<TitledComponent>(
-        "Templates", new ImageDropView(templatesTree, [this](juce::Component *p_caller, juce::ValueTree tree)
-                                       { return imagesUpdated(p_caller, tree); }));
+        "Templates",
+        std::make_unique<ImageDropView>(templatesTree, [this](juce::Component *p_caller, juce::ValueTree tree)
+                                        { return dropViewChanged(p_caller, tree); }));
 
     addAndMakeVisible(*mp_inputs);
     addAndMakeVisible(*mp_templates);
@@ -35,7 +36,7 @@ Blender::Blender()
 
 //-------------------------------------------------------------------------------------------------//
 
-std::unique_ptr<juce::Component> Blender::imagesUpdated(juce::Component *p_caller, juce::ValueTree tree)
+std::unique_ptr<juce::Component> Blender::dropViewChanged(juce::Component *p_caller, juce::ValueTree tree)
 {
     std::unique_ptr<juce::Component> p_imageDisplayer{ nullptr };
 

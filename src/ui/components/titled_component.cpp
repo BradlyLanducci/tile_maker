@@ -6,9 +6,9 @@ constexpr int TEXT_SIZE{ 25 };
 
 //-------------------------------------------------------------------------------------------------//
 
-TitledComponent::TitledComponent(const juce::String &title, juce::Component *p_component)
+TitledComponent::TitledComponent(const juce::String &title, std::unique_ptr<juce::Component> p_component)
     : m_title(title)
-    , mp_component(p_component)
+    , mp_component(std::move(p_component))
 {
     addAndMakeVisible(*mp_component);
 }

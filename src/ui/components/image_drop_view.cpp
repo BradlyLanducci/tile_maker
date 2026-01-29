@@ -8,8 +8,8 @@ const float HOVER_ALPHA{ 0.75f };
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageDropView::ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb)
-    : m_factoryCb(factoryCb)
+ImageDropView::ImageDropView(juce::ValueTree tree, ViewFactoryCallback viewFactoryCb)
+    : m_viewFactoryCb(viewFactoryCb)
     , m_tree(tree)
 
 {
@@ -19,15 +19,15 @@ ImageDropView::ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb)
 
 void ImageDropView::paint(juce::Graphics &g)
 {
-    if (mp_imageDisplayer)
+    if (mp_view)
     {
         if (m_hovered)
         {
-            mp_imageDisplayer->setAlpha(HOVER_ALPHA);
+            mp_view->setAlpha(HOVER_ALPHA);
         }
         else
         {
-            mp_imageDisplayer->setAlpha(1.f);
+            mp_view->setAlpha(1.f);
         }
     }
     else
@@ -96,11 +96,11 @@ void ImageDropView::filesDropped(const juce::StringArray &files, int x, int y)
         m_tree.appendChild(subTree, nullptr);
     }
 
-    mp_imageDisplayer = m_factoryCb(this, m_tree);
-    if (mp_imageDisplayer)
+    mp_view = m_viewFactoryCb(this, m_tree);
+    if (mp_view)
     {
-        mp_imageDisplayer->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
-        addAndMakeVisible(mp_imageDisplayer.get());
+        mp_view->setBounds(0, 0, bounds.getWidth(), bounds.getHeight());
+        addAndMakeVisible(mp_view.get());
     }
 }
 

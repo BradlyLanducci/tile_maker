@@ -8,14 +8,14 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-using FactoryCallback = std::function<std::unique_ptr<juce::Component>(juce::Component *, juce::ValueTree)>;
+using ViewFactoryCallback = std::function<std::unique_ptr<juce::Component>(juce::Component *, juce::ValueTree)>;
 
 class ImageDropView final
     : public juce::Component
     , public juce::FileDragAndDropTarget
 {
 public:
-    explicit ImageDropView(juce::ValueTree tree, FactoryCallback factoryCb);
+    explicit ImageDropView(juce::ValueTree tree, ViewFactoryCallback factoryCb);
 
     bool isInterestedInFileDrag(const juce::StringArray &files) override;
     void filesDropped(const juce::StringArray &files, int x, int y) override;
@@ -30,13 +30,13 @@ private:
 
     juce::StringArray m_images;
 
-    FactoryCallback m_factoryCb;
+    ViewFactoryCallback m_viewFactoryCb;
 
     bool m_hovered{ false };
 
     std::array<std::string, 3> m_validTypes{ ".png", ".jpeg", ".jpg" };
 
-    std::unique_ptr<juce::Component> mp_imageDisplayer{ nullptr };
+    std::unique_ptr<juce::Component> mp_view{ nullptr };
 
     juce::ValueTree m_tree;
 };
