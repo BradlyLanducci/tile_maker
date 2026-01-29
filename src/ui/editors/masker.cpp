@@ -3,7 +3,6 @@
 #include <ui/components/image_frame.h>
 #include <ui/models/file_list_model.h>
 #include <ui/components/image_list.h>
-#include "masker.h"
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -18,11 +17,19 @@ Masker::Masker()
     m_tree.appendChild(maskTree, nullptr);
 
     mp_input = std::make_unique<TitledComponent>(
-        "Inputs", new ImageDropView(inputTree, [this](juce::Component *p_caller, juce::ValueTree tree)
-                                    { return imagesUpdated(p_caller, tree); }));
+        "Inputs", new ImageDropView(inputTree,
+                                    [this](juce::Component *p_caller, juce::ValueTree tree)
+                                    {
+                                        (void)p_caller;
+                                        return imagesUpdated(tree);
+                                    }));
     mp_mask = std::make_unique<TitledComponent>(
-        "Masks", new ImageDropView(maskTree, [this](juce::Component *p_caller, juce::ValueTree tree)
-                                   { return imagesUpdated(p_caller, tree); }));
+        "Masks", new ImageDropView(maskTree,
+                                   [this](juce::Component *p_caller, juce::ValueTree tree)
+                                   {
+                                       (void)p_caller;
+                                       return imagesUpdated(tree);
+                                   }));
 
     addAndMakeVisible(*mp_input);
     addAndMakeVisible(*mp_mask);
@@ -31,10 +38,8 @@ Masker::Masker()
 
 //-------------------------------------------------------------------------------------------------//
 
-std::unique_ptr<juce::Component> Masker::imagesUpdated(juce::Component *p_caller, juce::ValueTree tree)
+std::unique_ptr<juce::Component> Masker::imagesUpdated(juce::ValueTree tree)
 {
-    (void)p_caller;
-
     juce::ValueTree inputTree{ m_tree.getChildWithName("Inputs") };
     juce::ValueTree maskTree{ m_tree.getChildWithName("Masks") };
 
@@ -92,7 +97,25 @@ void Masker::resized()
 
 void Masker::generate(const juce::String &baseOutputDirectory)
 {
-    (void)baseOutputDirectory;
+    juce::ValueTree inputTree{ m_tree.getChildWithName("Inputs") };
+    juce::ValueTree maskTree{ m_tree.getChildWithName("Masks") };
+
+    for (const auto &inImage : inputTree)
+    {
+        for (const auto &maskImage : maskTree)
+        {
+            ImageData in{ inImage.getType().toString().toStdString() };
+            ImageData mask{ maskImage.getType().toString().toStdString() };
+            std::unique_ptr<ImageData> p_maskedImage{ ImageManipulation::createMaskedImage(in, mask) };
+            if (p_maskedImage)
+            {
+                p_maskedImage->filepath = baseOutputDirectory.toStdString() + "/" + in.filename + "/";
+                p_maskedImage->filename = in.filename + "_" + mask.filename + "_masked";
+
+                p_maskedImage->writeToDisk();
+            }
+        }
+    }
 }
 
 //-------------------------------------------------------------------------------------------------//

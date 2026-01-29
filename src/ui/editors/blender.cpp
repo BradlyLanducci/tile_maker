@@ -5,7 +5,6 @@
 #include <ui/models/file_list_model.h>
 #include <ui/components/image_list.h>
 #include <ui/utilities/theme.h>
-#include "blender.h"
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -132,11 +131,6 @@ void Blender::generate(const juce::String &baseOutputDirectory)
     juce::ValueTree inputTree{ m_tree.getChildWithName("Inputs") };
     juce::ValueTree templatesTree{ m_tree.getChildWithName("Templates") };
 
-    if (inputTree.getNumChildren() == 0 || templatesTree.getNumChildren() == 0)
-    {
-        return;
-    }
-
     ImageFrame *p_output{ m_output.getComponent<ImageFrame>() };
 
     p_output->reset();
@@ -156,15 +150,18 @@ void Blender::generate(const juce::String &baseOutputDirectory)
     {
         juce::String templateFile{ templateImage.getType().toString() };
         ImageData templateImageData{ templateFile.toStdString() };
-        std::unique_ptr<ImageData> p_out{ ImageManipulation::blendInputsWithTemplate(mappedImageData,
-                                                                                     templateImageData) };
+        std::unique_ptr<ImageData> p_blendedImage{ ImageManipulation::blendInputsWithTemplate(mappedImageData,
+                                                                                              templateImageData) };
 
-        p_out->filepath = baseOutputDirectory.toStdString() + "/" + templateImageData.filename + "/";
-        p_out->filename = templateImageData.filename + "_" + std::to_string(i);
+        if (p_blendedImage)
+        {
+            p_blendedImage->filepath = baseOutputDirectory.toStdString() + "/" + templateImageData.filename + "/";
+            p_blendedImage->filename = templateImageData.filename + "_blended_" + std::to_string(i);
 
-        p_out->writeToDisk();
+            p_blendedImage->writeToDisk();
 
-        i++;
+            i++;
+        }
     }
 }
 
