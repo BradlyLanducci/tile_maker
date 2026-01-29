@@ -15,17 +15,22 @@ void ImageFrame::paint(juce::Graphics &g)
 {
     auto bounds{ getLocalBounds() };
 
-    /// TODO: Do not draw text if the current image is set
-    g.drawText(m_placeholderText, bounds, juce::Justification::centred);
-
-    // g.drawImage(m_image, bounds.toFloat(),
-    //             juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
+    if (m_hasImage)
+    {
+        g.drawImage(m_image, bounds.toFloat(),
+                    juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
+    }
+    else
+    {
+        g.drawText(m_placeholderText, bounds, juce::Justification::centred);
+    }
 }
 
 //-------------------------------------------------------------------------------------------------//
 
 void ImageFrame::setImage(std::unique_ptr<ImageData> p_imageData)
 {
+    m_hasImage = true;
     int numChannels{ p_imageData->channels };
 
     if (numChannels < 3 || numChannels > 4)
@@ -49,6 +54,7 @@ void ImageFrame::setImage(std::unique_ptr<ImageData> p_imageData)
 
 void ImageFrame::reset()
 {
+    m_hasImage = false;
     m_image.clear(getBounds());
     repaint();
 }

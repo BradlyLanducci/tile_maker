@@ -27,6 +27,7 @@ private:
 
     juce::Image m_image;
     juce::String m_placeholderText;
+    bool m_hasImage{ false };
 };
 
 //-------------------------------------------------------------------------------------------------//

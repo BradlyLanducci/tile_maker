@@ -110,7 +110,10 @@ void Masker::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChang
                 ImageData mask{ selectedMask.toStdString() };
                 std::unique_ptr<ImageData> p_maskedImage{ ImageManipulation::createMaskedImage(in, mask) };
 
-                p_output->setImage(std::move(p_maskedImage));
+                if (p_maskedImage)
+                {
+                    p_output->setImage(std::move(p_maskedImage));
+                }
             }
         }
     }
