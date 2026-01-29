@@ -11,8 +11,7 @@ struct ImageData;
 class ImageFrame final : public juce::Component
 {
 public:
-    ImageFrame() = default;
-    ImageFrame(std::unique_ptr<ImageData> p_imageData, const juce::String &placeholderText);
+    ImageFrame(const juce::String &placeholderText);
 
     void paint(juce::Graphics &g) override;
 

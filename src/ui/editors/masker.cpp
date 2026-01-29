@@ -14,7 +14,7 @@ const juce::Identifier MASK_TREE_ID{ "masks" };
 
 Masker::Masker()
     : m_tree{ "root" }
-    , m_output("Output", std::make_unique<ImageFrame>())
+    , m_output("Output", std::make_unique<ImageFrame>("Select an input and mask"))
 {
     juce::ValueTree inputTree{ INPUT_TREE_ID };
     juce::ValueTree maskTree{ MASK_TREE_ID };

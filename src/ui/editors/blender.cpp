@@ -15,7 +15,7 @@ const juce::Identifier TEMPLATE_TREE_ID{ "templates" };
 
 Blender::Blender()
     : m_tree("root")
-    , m_output("Output", std::make_unique<ImageFrame>())
+    , m_output("Output", std::make_unique<ImageFrame>("Select a template"))
 {
     juce::ValueTree inputTree{ INPUT_TREE_ID };
     juce::ValueTree templatesTree{ TEMPLATE_TREE_ID };
@@ -100,11 +100,11 @@ void Blender::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChan
         }
 
         ImageData templateImageData{ selectedTemplate.toStdString() };
-        std::unique_ptr<ImageData> p_out{ ImageManipulation::blendInputsWithTemplate(mappedImageData,
-                                                                                     templateImageData) };
-        if (p_out)
+        std::unique_ptr<ImageData> p_blendedImage{ ImageManipulation::blendInputsWithTemplate(mappedImageData,
+                                                                                              templateImageData) };
+        if (p_blendedImage)
         {
-            p_output->setImage(std::move(p_out));
+            p_output->setImage(std::move(p_blendedImage));
         }
     }
 }

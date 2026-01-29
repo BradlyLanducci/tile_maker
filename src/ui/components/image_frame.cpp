@@ -4,10 +4,9 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageFrame::ImageFrame(std::unique_ptr<ImageData> imageData, const juce::String &placeholderText)
+ImageFrame::ImageFrame(const juce::String &placeholderText)
     : m_placeholderText(placeholderText)
 {
-    setImage(std::move(imageData));
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -19,8 +18,8 @@ void ImageFrame::paint(juce::Graphics &g)
     /// TODO: Do not draw text if the current image is set
     g.drawText(m_placeholderText, bounds, juce::Justification::centred);
 
-    g.drawImage(m_image, bounds.toFloat(),
-                juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
+    // g.drawImage(m_image, bounds.toFloat(),
+    //             juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
 }
 
 //-------------------------------------------------------------------------------------------------//
