@@ -12,7 +12,7 @@ class ImageFrame final : public juce::Component
 {
 public:
     ImageFrame() = default;
-    ImageFrame(std::unique_ptr<ImageData> p_imageData);
+    ImageFrame(std::unique_ptr<ImageData> p_imageData, const juce::String &placeholderText);
 
     void paint(juce::Graphics &g) override;
 
@@ -27,6 +27,7 @@ private:
     void RGBToRGB(ImageData *p_imageData);
 
     juce::Image m_image;
+    juce::String m_placeholderText;
 };
 
 //-------------------------------------------------------------------------------------------------//

@@ -6,17 +6,23 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-class Masker final : public Editor
+class Masker final
+    : public Editor
+    , public juce::ValueTree::Listener
 {
 public:
     Masker();
 
     void resized() override;
-
     void generate(const juce::String &baseOutputDirectory) override;
 
 private:
-    std::unique_ptr<juce::Component> dropViewChanged(juce::ValueTree tree);
+    [[nodiscard]] std::unique_ptr<juce::Component> dropViewChanged(juce::ValueTree tree);
+
+    void valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged,
+                                  const juce::Identifier &property) override;
+
+    juce::String getSelectedFile(const juce::ValueTree &tree);
 
     juce::ValueTree m_tree;
 

@@ -1,33 +1,42 @@
-#include <ui/models/file_list_model.h>
+#include <ui/models/selectable_file_list_model.h>
 #include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
-FileListModel::FileListModel(juce::ValueTree tree)
+SelectableFileListModel::SelectableFileListModel(juce::ValueTree tree)
     : m_tree(tree)
 {
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-int FileListModel::getNumRows()
+int SelectableFileListModel::getNumRows()
 {
     return m_tree.getNumChildren();
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-void FileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height, bool rowIsSelected)
+void SelectableFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g, int width, int height,
+                                               bool rowIsSelected)
 {
-    (void)rowIsSelected;
-
-    g.fillAll(juce::Colours::transparentBlack);
-
     if (rowNumber < getNumRows())
     {
         juce::ValueTree child{ m_tree.getChild(rowNumber) };
         juce::File file{ child.getType().toString() };
         juce::String fileName{ file.getFileNameWithoutExtension().replace("_", " ") };
+
+        if (rowIsSelected)
+        {
+            g.fillAll(juce::Colours::white);
+            child.setProperty(Theme::SELECTED_KEY, true, nullptr);
+        }
+        else
+        {
+            child.setProperty(Theme::SELECTED_KEY, false, nullptr);
+            g.fillAll(juce::Colours::transparentBlack);
+        }
+
         g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
         if (child.isValid())
         {

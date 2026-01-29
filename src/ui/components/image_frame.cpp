@@ -4,7 +4,8 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-ImageFrame::ImageFrame(std::unique_ptr<ImageData> imageData)
+ImageFrame::ImageFrame(std::unique_ptr<ImageData> imageData, const juce::String &placeholderText)
+    : m_placeholderText(placeholderText)
 {
     setImage(std::move(imageData));
 }
@@ -13,7 +14,12 @@ ImageFrame::ImageFrame(std::unique_ptr<ImageData> imageData)
 
 void ImageFrame::paint(juce::Graphics &g)
 {
-    g.drawImage(m_image, getLocalBounds().toFloat(),
+    auto bounds{ getLocalBounds() };
+
+    /// TODO: Do not draw text if the current image is set
+    g.drawText(m_placeholderText, bounds, juce::Justification::centred);
+
+    g.drawImage(m_image, bounds.toFloat(),
                 juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize);
 }
 
@@ -45,6 +51,7 @@ void ImageFrame::setImage(std::unique_ptr<ImageData> p_imageData)
 void ImageFrame::reset()
 {
     m_image.clear(getBounds());
+    repaint();
 }
 
 //-------------------------------------------------------------------------------------------------//

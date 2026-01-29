@@ -6,6 +6,7 @@ namespace Theme
 {
     const juce::Identifier FORCE_UPDATE{ "force_update" };
     const juce::Identifier COLOUR_KEY{ "colour" };
+    const juce::Identifier SELECTED_KEY{ "selected" };
 
     enum class EditorType : uint32_t
     {
