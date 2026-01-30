@@ -1,6 +1,8 @@
 #include <ui/editors/noiser.h>
 #include <ui/components/image_frame.h>
 #include <ui/models/selectable_file_list_model.h>
+#include <ui/utilities/theme.h>
+#include <processing/image_manipulation.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -64,12 +66,36 @@ std::unique_ptr<juce::Component> Noiser::dropViewChanged(juce::ValueTree tree)
 
 void Noiser::valueTreePropertyChanged(juce::ValueTree &treeWhosePropertyHasChanged, const juce::Identifier &property)
 {
+    if (property == Theme::SELECTED_KEY && treeWhosePropertyHasChanged[property])
+    {
+        juce::String inputFilename{ treeWhosePropertyHasChanged.getType().toString() };
+
+        ImageFrame *p_output{ m_output.getComponent<ImageFrame>() };
+
+        p_output->reset();
+        ImageData inputImageData{ inputFilename.toStdString() };
+
+        /// TODO: These should be configurable through UI
+        float opacity{ 0.25f };
+        Noise::Type type{ Noise::Type::VALUE };
+        float frequency{ 50.f };
+        int seed{ 0 };
+
+        Noise noise{ type, frequency, seed };
+
+        std::unique_ptr<ImageData> p_noisedImage{ ImageManipulation::applyNoise(inputImageData, noise, opacity) };
+        if (p_noisedImage)
+        {
+            p_output->setImage(std::move(p_noisedImage));
+        }
+    }
 }
 
 //-------------------------------------------------------------------------------------------------//
 
 void Noiser::generate(const juce::String &baseOutputDirectory)
 {
+    (void)baseOutputDirectory;
 }
 
 //-------------------------------------------------------------------------------------------------//

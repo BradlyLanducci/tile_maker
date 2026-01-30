@@ -4,8 +4,6 @@
 #include <ui/components/titled_component.h>
 #include <ui/editors/editor.h>
 
-#include <fast_noise_lite.h>
-
 //-------------------------------------------------------------------------------------------------//
 
 class Noiser final

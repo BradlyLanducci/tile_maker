@@ -1,5 +1,4 @@
 #include <processing/image_manipulation.h>
-
 #include <iostream>
 
 //-------------------------------------------------------------------------------------------------//
@@ -100,6 +99,38 @@ std::unique_ptr<ImageData> ImageManipulation::blendInputsWithTemplate(const std:
                     std::memcpy(p_output->p_data + outputOffsetBytes, tileDataToUse + inputOffsetBytes,
                                 (size_t)p_output->channels);
                 }
+            }
+        }
+    }
+
+    return std::move(p_output);
+}
+
+//-------------------------------------------------------------------------------------------------//
+
+std::unique_ptr<ImageData> ImageManipulation::applyNoise(const ImageData &in, const Noise &noise, float opacity)
+{
+    std::unique_ptr<ImageData> p_output{ std::make_unique<ImageData>(in.width, in.height, in.channels) };
+
+    for (int y = 0; y < in.height; y++)
+    {
+        for (int x = 0; x < in.width; x++)
+        {
+            int offsetBytes{ (y * in.width + x) * in.channels };
+
+            float normalizedNoise{ noise.get2D(x, y) / 2.f + 0.5f };
+            uint8_t scaledNoise{ (uint8_t)(normalizedNoise * 255.f) };
+            uint8_t a{ *(in.p_data + offsetBytes + 3) };
+            if (a != 0)
+            {
+                uint8_t r{ *(in.p_data + offsetBytes) };
+                uint8_t g{ *(in.p_data + offsetBytes + 1) };
+                uint8_t b{ *(in.p_data + offsetBytes + 2) };
+
+                *(p_output->p_data + offsetBytes) = (uint8_t)std::lerp(r, scaledNoise, opacity);
+                *(p_output->p_data + offsetBytes + 1) = (uint8_t)std::lerp(g, scaledNoise, opacity);
+                *(p_output->p_data + offsetBytes + 2) = (uint8_t)std::lerp(b, scaledNoise, opacity);
+                *(p_output->p_data + offsetBytes + 3) = (uint8_t)std::lerp(a, scaledNoise, opacity);
             }
         }
     }

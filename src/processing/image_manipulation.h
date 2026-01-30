@@ -1,6 +1,7 @@
 #pragma once
 
 #include <processing/image_data.h>
+#include <processing/noise.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -17,6 +18,8 @@ public:
     /// @param tmp Template texture
     static std::unique_ptr<ImageData> blendInputsWithTemplate(const std::vector<ColourMappedImageData> &inputs,
                                                               ImageData &temp);
+
+    static std::unique_ptr<ImageData> applyNoise(const ImageData &in, const Noise &noise, float opacity);
 };
 
 //-------------------------------------------------------------------------------------------------//
