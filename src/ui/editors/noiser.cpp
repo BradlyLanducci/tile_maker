@@ -159,14 +159,17 @@ void Noiser::updateOutput(const juce::String &input)
 
     p_output->reset();
 
-    ImageData inputImageData{ input.toStdString() };
-    Noise noise{ getSelectedNoise() };
-    float opacity{ (float)m_opacitySlider.getValue() };
-
-    std::unique_ptr<ImageData> p_noisedImage{ ImageManipulation::applyNoise(inputImageData, noise, opacity) };
-    if (p_noisedImage)
+    if (input.isNotEmpty())
     {
-        p_output->setImage(std::move(p_noisedImage));
+        ImageData inputImageData{ input.toStdString() };
+        Noise noise{ getSelectedNoise() };
+        float opacity{ (float)m_opacitySlider.getValue() };
+
+        std::unique_ptr<ImageData> p_noisedImage{ ImageManipulation::applyNoise(inputImageData, noise, opacity) };
+        if (p_noisedImage)
+        {
+            p_output->setImage(std::move(p_noisedImage));
+        }
     }
 }
 
