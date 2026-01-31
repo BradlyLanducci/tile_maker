@@ -1,7 +1,7 @@
 #include <ui/components/image_drop_view.h>
 #include <ui/components/image_frame.h>
 #include <processing/image_manipulation.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -35,11 +35,11 @@ void ImageDropView::paint(juce::Graphics &g)
     {
         if (m_hovered)
         {
-            g.setColour(juce::Colours::white.withAlpha(HOVER_ALPHA));
+            g.setColour(Theme::LIGHT_TEXT.withAlpha(HOVER_ALPHA));
         }
         else
         {
-            g.setColour(juce::Colours::white);
+            g.setColour(Theme::LIGHT_TEXT);
         }
 
         g.setFont(Theme::NORMAL_FONT_SIZE);

@@ -1,5 +1,5 @@
 #include <ui/components/titled_component.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 #include <BinaryData.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -23,8 +23,9 @@ void TitledComponent::paint(juce::Graphics &g)
     m_slice.draw(g, getLocalBounds());
     auto bounds{ getBounds() };
     g.setFont(Theme::BIG_FONT_SIZE);
-    g.setColour(juce::Colours::white);
-    g.drawText(m_title, 0, 0, bounds.getWidth(), TEXT_SIZE, juce::Justification::centred);
+    g.setColour(Theme::LIGHT_TEXT);
+    g.drawText(m_title, 0, (int)g.getCurrentFont().getHeight() / 2, bounds.getWidth(), TEXT_SIZE,
+               juce::Justification::centred);
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -33,9 +34,9 @@ void TitledComponent::resized()
 {
     auto bounds{ getBounds() };
     bounds = bounds.removeFromBottom(bounds.getHeight() - TEXT_SIZE);
-    const int padding{ 4 };
+    const int padding{ 16 };
     bounds.reduce(padding, padding);
-    mp_component->setBounds(padding, TEXT_SIZE + padding, bounds.getWidth(), bounds.getHeight());
+    mp_component->setBounds(padding, TEXT_SIZE + 2 * padding, bounds.getWidth(), bounds.getHeight());
 }
 
 //-------------------------------------------------------------------------------------------------//

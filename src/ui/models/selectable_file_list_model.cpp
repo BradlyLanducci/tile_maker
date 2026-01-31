@@ -1,5 +1,5 @@
 #include <ui/models/selectable_file_list_model.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -28,17 +28,20 @@ void SelectableFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g,
 
         if (rowIsSelected)
         {
-            g.fillAll(juce::Colours::white);
+            g.fillAll(Theme::LIGHT_TEXT);
             child.setProperty(Theme::SELECTED_KEY, true, nullptr);
+            g.setColour(Theme::DARK_TEXT);
         }
         else
         {
             g.fillAll(juce::Colours::transparentBlack);
             child.setProperty(Theme::SELECTED_KEY, false, nullptr);
+            g.setColour(Theme::LIGHT_TEXT);
         }
 
         g.setFont(Theme::NORMAL_FONT_SIZE);
         g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
+
         if (child.isValid())
         {
             child.setProperty(Theme::FORCE_UPDATE, Theme::FORCE_UPDATE.toString(), nullptr);

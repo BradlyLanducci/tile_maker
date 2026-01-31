@@ -1,7 +1,7 @@
 #include <ui/editors/noiser.h>
 #include <ui/components/image_frame.h>
 #include <ui/models/selectable_file_list_model.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 #include <magic_enum/magic_enum.hpp>
 
@@ -93,8 +93,8 @@ void Noiser::resized()
     int sideLength{ std::min(left.getWidth(), left.getHeight()) };
 
     int centeredHeight{ (bounds.getHeight() - sideLength) / 2 };
-    mp_inputs->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
-    m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
+    mp_inputs->setBounds((left.getWidth() - sideLength) / 2, centeredHeight, sideLength, sideLength);
+    m_output.setBounds(right.getX() + (right.getWidth() - sideLength) / 2, centeredHeight, sideLength, sideLength);
 }
 
 //-------------------------------------------------------------------------------------------------//

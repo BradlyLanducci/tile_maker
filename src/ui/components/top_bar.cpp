@@ -1,5 +1,5 @@
 #include <ui/components/top_bar.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 #include <magic_enum/magic_enum.hpp>
 
@@ -26,7 +26,7 @@ TopBar::TopBar(SelectedCallback selectedCb)
     , m_selectedCb(selectedCb)
 {
     m_hBox.flexDirection = juce::FlexBox::Direction::row;
-    m_hBox.justifyContent = juce::FlexBox::JustifyContent::flexStart;
+    m_hBox.justifyContent = juce::FlexBox::JustifyContent::center;
     m_hBox.alignItems = juce::FlexBox::AlignItems::center;
 
     for (const auto &p_button : m_buttons)
@@ -46,25 +46,28 @@ TopBar::TopBar(SelectedCallback selectedCb)
 
             addAndMakeVisible(*p_button);
             juce::FlexItem &flexitem{ m_flexItems.emplace_back(*p_button) };
-            m_hBox.items.add(flexitem.withMinWidth(200.f).withMinHeight(25.f));
+            m_hBox.items.add(flexitem.withMinWidth(200.f).withMinHeight(50.f).withMargin(juce::FlexItem::Margin(4.f)));
         }
+
+        p_button->setLookAndFeel(&m_look);
     }
 }
 
 //-------------------------------------------------------------------------------------------------//
 
-void TopBar::paint(juce::Graphics &g)
+TopBar::~TopBar()
 {
-    g.setFont(Theme::BIG_FONT_SIZE);
-    g.setColour(juce::Colours::white);
-    g.drawText("Iso Tile Maker", getLocalBounds().removeFromRight(Theme::TITLE_WIDTH), juce::Justification::centred);
+    for (const auto &p_button : m_buttons)
+    {
+        p_button->setLookAndFeel(nullptr);
+    }
 }
 
 //-------------------------------------------------------------------------------------------------//
 
 void TopBar::resized()
 {
-    m_hBox.performLayout(getLocalBounds().removeFromLeft(getWidth() - Theme::TITLE_WIDTH));
+    m_hBox.performLayout(getLocalBounds());
 }
 
 //-------------------------------------------------------------------------------------------------//

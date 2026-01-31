@@ -1,6 +1,6 @@
 #include <ui/components/image_color_picker.h>
 #include <juce_gui_extra/juce_gui_extra.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -17,7 +17,7 @@ void ImageColorPicker::paint(juce::Graphics &g)
         m_tree.getProperty(Theme::COLOUR_KEY, juce::Colours::black.toString()).toString()) };
     g.setColour(colour);
     auto bounds{ getLocalBounds().removeFromRight(50) };
-    bounds.reduce(4, 4);
+    bounds.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
     auto sideLength{ std::min(bounds.getWidth(), bounds.getHeight()) };
     g.fillRect(bounds.getX(), bounds.getY(), sideLength, sideLength);
 }

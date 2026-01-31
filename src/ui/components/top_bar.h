@@ -1,6 +1,7 @@
 #pragma once
 
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
+#include <ui/theme/nine_slice_look.h>
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <functional>
@@ -15,8 +16,8 @@ class TopBar final : public juce::Component
 {
 public:
     explicit TopBar(SelectedCallback selectedCb);
+    ~TopBar() override;
 
-    void paint(juce::Graphics &g) override;
     void resized() override;
 
 private:
@@ -24,6 +25,8 @@ private:
     std::vector<juce::FlexItem> m_flexItems;
     std::vector<std::unique_ptr<juce::Component>> m_buttons;
     SelectedCallback m_selectedCb{ nullptr };
+
+    NineSliceLook m_look;
 };
 
 //-------------------------------------------------------------------------------------------------//

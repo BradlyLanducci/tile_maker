@@ -2,7 +2,7 @@
 #include <ui/editors/masker.h>
 #include <ui/editors/blender.h>
 #include <ui/editors/noiser.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -16,6 +16,9 @@ MainContent::MainContent()
     addAndMakeVisible(m_directoryChooser);
     addAndMakeVisible(m_generate);
 
+    m_directoryChooser.setLookAndFeel(&m_look);
+    m_generate.setLookAndFeel(&m_look);
+
     m_generate.onClick = [this]()
     {
         if (mp_editor)
@@ -23,6 +26,14 @@ MainContent::MainContent()
             mp_editor->generate(m_directoryChooser.getOutputDirectory());
         }
     };
+}
+
+//-------------------------------------------------------------------------------------------------//
+
+MainContent::~MainContent()
+{
+    m_directoryChooser.setLookAndFeel(nullptr);
+    m_generate.setLookAndFeel(nullptr);
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -37,13 +48,27 @@ void MainContent::paint(juce::Graphics &g)
 void MainContent::resized()
 {
     auto bounds{ getLocalBounds() };
-    m_topBar.setBounds(bounds.removeFromTop(50));
+
+    auto top{ bounds.removeFromTop(75) };
+    top.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+    m_topBar.setBounds(top);
+
+    auto bottom{ bounds.removeFromBottom(100) };
+
+    auto bottomLeft{ bottom.removeFromLeft(getWidth() / 2) };
+    auto dirBounds{ bottomLeft.reduced(10).withWidth(200) };
+    m_directoryChooser.setBounds(
+        dirBounds.withX(dirBounds.getX() + (bottomLeft.getWidth() - dirBounds.getWidth()) / 2));
+
+    auto genBounds{ bottom.removeFromBottom(75).reduced(10).withWidth(200) };
+    m_generate.setBounds(genBounds.withX(genBounds.getX() + (bottom.getWidth() - genBounds.getWidth()) / 2));
+
     if (mp_editor)
     {
-        mp_editor->setBounds(bounds.removeFromTop(500));
+        const int editorPadding{ 50 };
+        bounds.reduce(editorPadding, editorPadding);
+        mp_editor->setBounds(bounds);
     }
-    m_directoryChooser.setBounds(bounds.removeFromLeft(getWidth() / 2));
-    m_generate.setBounds(bounds);
 }
 
 //-------------------------------------------------------------------------------------------------//

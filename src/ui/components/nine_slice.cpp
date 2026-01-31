@@ -13,40 +13,54 @@ NineSlice::NineSlice(const char *data, int bytes)
 /// https://forum.juce.com/t/scale-9-images/26275/7
 void NineSlice::draw(juce::Graphics &g, const juce::Rectangle<int> &localBounds)
 {
-    const int dw{ localBounds.getWidth() };
-    const int dh{ localBounds.getHeight() };
-    const int iw{ m_image.getWidth() };
-    const int ih{ m_image.getHeight() };
+    const int iw = m_image.getWidth();
+    const int ih = m_image.getHeight();
 
-    const int sliceLeft{ m_image.getWidth() / 3 };
-    const int sliceTop{ m_image.getHeight() / 3 };
-    const int sliceRight{ 2 * m_image.getWidth() / 3 };
-    const int sliceBottom{ 2 * m_image.getHeight() / 3 };
+    // ---- FIXED BORDER THICKNESS (pixels)
+    const int left = 10;
+    const int right = 10;
+    const int top = 10;
+    const int bottom = 10;
 
-    const int sCenterWidth{ iw - sliceLeft - (iw - sliceRight) };
-    const int sCenterHeight{ ih - sliceTop - (ih - sliceBottom) };
-    const int dRightX{ dw - (iw - sliceRight) };
-    const int dBottomY{ dh - (ih - sliceBottom) };
-    const int dCenterHeight{ dh - sliceTop - (ih - sliceBottom) };
-    const int dCenterWidth{ dw - sliceLeft - (iw - sliceRight) };
-    const int bottomHeight{ ih - sliceBottom };
-    const int rightWidth{ iw - sliceRight };
+    // ---- Minimum size required
+    const int minW = left + right;
+    const int minH = top + bottom;
 
-    // left column
-    g.drawImage(m_image, 0, 0, sliceLeft, sliceTop, 0, 0, sliceLeft, sliceTop);
-    g.drawImage(m_image, 0, sliceTop, sliceLeft, dCenterHeight, 0, sliceTop, sliceLeft, sCenterHeight);
-    g.drawImage(m_image, 0, dBottomY, sliceLeft, bottomHeight, 0, sliceBottom, sliceLeft, bottomHeight);
-    // center column
-    g.drawImage(m_image, sliceLeft, 0, dCenterWidth, sliceTop, sliceLeft, 0, sCenterWidth, sliceTop);
-    g.drawImage(m_image, sliceLeft, sliceTop, dCenterWidth, dCenterHeight, sliceLeft, sliceTop, sCenterWidth,
-                sCenterHeight);
-    g.drawImage(m_image, sliceLeft, dBottomY, dCenterWidth, bottomHeight, sliceLeft, sliceBottom, sCenterWidth,
-                bottomHeight);
-    // right column
-    g.drawImage(m_image, dRightX, 0, rightWidth, sliceTop, sliceRight, 0, rightWidth, sliceTop);
-    g.drawImage(m_image, dRightX, sliceTop, rightWidth, dCenterHeight, sliceRight, sliceTop, rightWidth, sCenterHeight);
-    g.drawImage(m_image, dRightX, dBottomY, rightWidth, bottomHeight, sliceRight, sliceBottom, rightWidth,
-                bottomHeight);
+    if (localBounds.getWidth() < minW || localBounds.getHeight() < minH)
+        return; // cannot draw safely
+
+    const int dw = localBounds.getWidth();
+    const int dh = localBounds.getHeight();
+
+    // ---- SOURCE SIZES
+    const int srcCenterW = iw - left - right;
+    const int srcCenterH = ih - top - bottom;
+
+    // ---- DESTINATION SIZES
+    const int dstCenterW = dw - left - right;
+    const int dstCenterH = dh - top - bottom;
+
+    const int x0 = localBounds.getX();
+    const int y0 = localBounds.getY();
+    const int x1 = x0 + left;
+    const int x2 = x0 + left + dstCenterW;
+    const int y1 = y0 + top;
+    const int y2 = y0 + top + dstCenterH;
+
+    // ---- TOP ROW
+    g.drawImage(m_image, x0, y0, left, top, 0, 0, left, top);
+    g.drawImage(m_image, x1, y0, dstCenterW, top, left, 0, srcCenterW, top);
+    g.drawImage(m_image, x2, y0, right, top, iw - right, 0, right, top);
+
+    // ---- MIDDLE ROW
+    g.drawImage(m_image, x0, y1, left, dstCenterH, 0, top, left, srcCenterH);
+    g.drawImage(m_image, x1, y1, dstCenterW, dstCenterH, left, top, srcCenterW, srcCenterH);
+    g.drawImage(m_image, x2, y1, right, dstCenterH, iw - right, top, right, srcCenterH);
+
+    // ---- BOTTOM ROW
+    g.drawImage(m_image, x0, y2, left, bottom, 0, ih - bottom, left, bottom);
+    g.drawImage(m_image, x1, y2, dstCenterW, bottom, left, ih - bottom, srcCenterW, bottom);
+    g.drawImage(m_image, x2, y2, right, bottom, iw - right, ih - bottom, right, bottom);
 }
 
 //-------------------------------------------------------------------------------------------------//

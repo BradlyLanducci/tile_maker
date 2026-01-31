@@ -3,7 +3,7 @@
 #include <ui/components/image_frame.h>
 #include <ui/models/selectable_file_list_model.h>
 #include <ui/components/image_list.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 

@@ -1,6 +1,6 @@
 #include <ui/models/mapped_file_list_model.h>
 #include <ui/components/image_color_picker.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -30,7 +30,8 @@ void MappedFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g, int
         juce::File file{ child.getType().toString() };
         juce::String fileName{ file.getFileNameWithoutExtension().replace("_", " ") };
         g.setFont(Theme::NORMAL_FONT_SIZE);
-        g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
+        g.setColour(Theme::LIGHT_TEXT);
+        g.drawText(fileName, 10, 0, width, height, juce::Justification::left);
     }
 }
 

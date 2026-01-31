@@ -1,11 +1,11 @@
 #include <ui/components/directory_chooser.h>
-#include <ui/utilities/theme.h>
+#include <ui/theme/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
 DirectoryChooser::DirectoryChooser()
-    : m_button("Select some shit")
-    , m_chooser("Select a output directory", juce::File::getSpecialLocation(juce::File::userHomeDirectory))
+    : m_button(juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getFileName())
+    , m_chooser("What is this", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory))
 {
     addAndMakeVisible(m_button);
 
@@ -15,8 +15,11 @@ DirectoryChooser::DirectoryChooser()
                               [this](const juce::FileChooser &fc)
                               {
                                   juce::File selectedDirectory{ fc.getResult() };
-                                  m_selectedDirectory = selectedDirectory.getFullPathName();
-                                  m_button.setButtonText(selectedDirectory.getFileName());
+                                  if (selectedDirectory.exists())
+                                  {
+                                      m_selectedDirectory = selectedDirectory.getFullPathName();
+                                      m_button.setButtonText(selectedDirectory.getFileName());
+                                  }
                               });
     };
 }
@@ -25,6 +28,7 @@ DirectoryChooser::DirectoryChooser()
 
 void DirectoryChooser::paint(juce::Graphics &g)
 {
+    g.setColour(Theme::LIGHT_TEXT);
     g.setFont(Theme::NORMAL_FONT_SIZE);
     g.drawText("Output Directory", getLocalBounds().removeFromTop(25), juce::Justification::left);
 }
