@@ -33,10 +33,11 @@ void SelectableFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g,
         }
         else
         {
-            child.setProperty(Theme::SELECTED_KEY, false, nullptr);
             g.fillAll(juce::Colours::transparentBlack);
+            child.setProperty(Theme::SELECTED_KEY, false, nullptr);
         }
 
+        g.setFont(Theme::NORMAL_FONT_SIZE);
         g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
         if (child.isValid())
         {

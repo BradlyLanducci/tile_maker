@@ -1,6 +1,7 @@
 #include <ui/components/image_drop_view.h>
 #include <ui/components/image_frame.h>
 #include <processing/image_manipulation.h>
+#include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -34,13 +35,14 @@ void ImageDropView::paint(juce::Graphics &g)
     {
         if (m_hovered)
         {
-            g.fillAll(juce::Colours::red.withAlpha(HOVER_ALPHA));
+            g.setColour(juce::Colours::white.withAlpha(HOVER_ALPHA));
         }
         else
         {
-            g.fillAll(juce::Colours::red);
+            g.setColour(juce::Colours::white);
         }
 
+        g.setFont(Theme::NORMAL_FONT_SIZE);
         g.drawText("Drag image here", getLocalBounds(), juce::Justification::centred);
     }
 }

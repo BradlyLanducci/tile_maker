@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ui/components/nine_slice.h>
+
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -19,6 +21,7 @@ public:
 
 private:
     juce::String m_title;
+    NineSlice m_slice;
     std::unique_ptr<juce::Component> mp_component;
 };
 

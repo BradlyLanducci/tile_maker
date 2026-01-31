@@ -27,6 +27,13 @@ MainContent::MainContent()
 
 //-------------------------------------------------------------------------------------------------//
 
+void MainContent::paint(juce::Graphics &g)
+{
+    g.fillAll(juce::Colours::black);
+}
+
+//-------------------------------------------------------------------------------------------------//
+
 void MainContent::resized()
 {
     auto bounds{ getLocalBounds() };

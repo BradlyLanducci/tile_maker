@@ -29,6 +29,7 @@ void MappedFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g, int
         juce::ValueTree child{ m_tree.getChild(rowNumber) };
         juce::File file{ child.getType().toString() };
         juce::String fileName{ file.getFileNameWithoutExtension().replace("_", " ") };
+        g.setFont(Theme::NORMAL_FONT_SIZE);
         g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
     }
 }

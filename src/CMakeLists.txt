@@ -18,6 +18,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(magic_enum)
 
+juce_add_binary_data(
+    Assets 
+    SOURCES
+        ${CMAKE_SOURCE_DIR}/assets/nine_slice_panel.png
+        ${CMAKE_SOURCE_DIR}/assets/m5x7.ttf
+)
+
+set_target_properties(Assets PROPERTIES FOLDER "Targets")
+
 juce_add_gui_app(${PROJECT_NAME} PRODUCT_NAME "Iso Tile Maker")
 juce_generate_juce_header(${PROJECT_NAME})
 
@@ -46,6 +55,7 @@ target_compile_definitions(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} 
         PRIVATE
+                Assets
                 juce::juce_recommended_config_flags
                 juce::juce_recommended_lto_flags
                 juce::juce_recommended_warning_flags

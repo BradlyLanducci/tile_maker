@@ -1,4 +1,5 @@
 #include <ui/components/top_bar.h>
+#include <ui/utilities/theme.h>
 
 #include <magic_enum/magic_enum.hpp>
 
@@ -54,6 +55,8 @@ TopBar::TopBar(SelectedCallback selectedCb)
 
 void TopBar::paint(juce::Graphics &g)
 {
+    g.setFont(Theme::BIG_FONT_SIZE);
+    g.setColour(juce::Colours::white);
     g.drawText("Iso Tile Maker", getLocalBounds().removeFromRight(Theme::TITLE_WIDTH), juce::Justification::centred);
 }
 

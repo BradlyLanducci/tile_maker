@@ -12,6 +12,7 @@ class MainContent : public juce::Component
 public:
     MainContent();
 
+    void paint(juce::Graphics &g) override;
     void resized() override;
 
 private:

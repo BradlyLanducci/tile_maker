@@ -1,4 +1,5 @@
 #include <ui/components/directory_chooser.h>
+#include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -24,6 +25,7 @@ DirectoryChooser::DirectoryChooser()
 
 void DirectoryChooser::paint(juce::Graphics &g)
 {
+    g.setFont(Theme::NORMAL_FONT_SIZE);
     g.drawText("Output Directory", getLocalBounds().removeFromTop(25), juce::Justification::left);
 }
 

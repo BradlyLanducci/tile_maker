@@ -16,5 +16,7 @@ namespace Theme
         Noiser = 3
     };
 
-    constexpr int TITLE_WIDTH{ 100 };
+    constexpr int TITLE_WIDTH{ 200 };
+    constexpr int NORMAL_FONT_SIZE{ 16 };
+    constexpr int BIG_FONT_SIZE{ 32 };
 }

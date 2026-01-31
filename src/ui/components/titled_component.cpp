@@ -1,4 +1,6 @@
 #include <ui/components/titled_component.h>
+#include <ui/utilities/theme.h>
+#include <BinaryData.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -8,6 +10,7 @@ constexpr int TEXT_SIZE{ 25 };
 
 TitledComponent::TitledComponent(const juce::String &title, std::unique_ptr<juce::Component> p_component)
     : m_title(title)
+    , m_slice(BinaryData::nine_slice_panel_png, BinaryData::nine_slice_panel_pngSize)
     , mp_component(std::move(p_component))
 {
     addAndMakeVisible(*mp_component);
@@ -17,8 +20,10 @@ TitledComponent::TitledComponent(const juce::String &title, std::unique_ptr<juce
 
 void TitledComponent::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colours::darkslategrey);
+    m_slice.draw(g, getLocalBounds());
     auto bounds{ getBounds() };
+    g.setFont(Theme::BIG_FONT_SIZE);
+    g.setColour(juce::Colours::white);
     g.drawText(m_title, 0, 0, bounds.getWidth(), TEXT_SIZE, juce::Justification::centred);
 }
 

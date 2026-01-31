@@ -1,6 +1,6 @@
 #include <ui/components/image_frame.h>
-
 #include <processing/image_data.h>
+#include <ui/utilities/theme.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -22,6 +22,8 @@ void ImageFrame::paint(juce::Graphics &g)
     }
     else
     {
+        g.setFont(Theme::NORMAL_FONT_SIZE);
+        g.setColour(juce::Colours::white);
         g.drawText(m_placeholderText, bounds, juce::Justification::centred);
     }
 }
