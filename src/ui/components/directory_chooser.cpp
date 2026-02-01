@@ -30,7 +30,7 @@ void DirectoryChooser::paint(juce::Graphics &g)
 {
     g.setColour(Theme::LIGHT_TEXT);
     g.setFont(Theme::NORMAL_FONT_SIZE);
-    g.drawText("Output Directory", getLocalBounds().removeFromTop(25), juce::Justification::left);
+    g.drawText("Output Directory", getLocalBounds().removeFromTop(25), juce::Justification::centred);
 }
 
 //-------------------------------------------------------------------------------------------------//

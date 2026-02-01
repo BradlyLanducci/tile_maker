@@ -5,6 +5,7 @@
 #include <ui/theme/nine_slice_look.h>
 #include <ui/editors/editor.h>
 #include <ui/components/background_animation.h>
+#include <ui/components/titled_component.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -29,6 +30,8 @@ private:
 
     NineSliceLook m_look;
     juce::TextButton m_generate;
+
+    TitledComponent m_scaler;
 };
 
 //-------------------------------------------------------------------------------------------------//

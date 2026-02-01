@@ -8,6 +8,9 @@ namespace Theme
     const juce::Identifier COLOUR_KEY{ "colour" };
     const juce::Identifier SELECTED_KEY{ "selected" };
 
+    constexpr int DEFAULT_WINDOW_WIDTH{ 1440 };
+    constexpr int DEFAULT_WINDOW_HEIGHT{ 810 };
+
     constexpr int TITLE_WIDTH{ 200 };
     constexpr int NORMAL_FONT_SIZE{ 16 };
     constexpr int BIG_FONT_SIZE{ 32 };

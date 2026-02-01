@@ -1,5 +1,5 @@
 #include <ui/main_window.h>
-
+#include <ui/theme/theme.h>
 #include <BinaryData.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -10,9 +10,6 @@ MainWindow::MainWindow(juce::String name)
     setVisible(true);
 
     setContentOwned(&m_content, true);
-    getConstrainer()->setFixedAspectRatio(16.0 / 9.0);
-    setResizeLimits(1920 / 2, 1080 / 2, 1920 * 2, 1080 * 2);
-
     m_content.setBounds(0, 0, 1440, 810);
 
     auto font{ juce::Typeface::createSystemTypefaceFor(BinaryData::m5x7_ttf, BinaryData::m5x7_ttfSize) };
