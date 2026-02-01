@@ -4,14 +4,6 @@
 
 namespace Theme
 {
-    enum class EditorType : uint32_t
-    {
-        None = 0,
-        Masker = 1,
-        Blender = 2,
-        Noiser = 3
-    };
-
     const juce::Identifier FORCE_UPDATE{ "force_update" };
     const juce::Identifier COLOUR_KEY{ "colour" };
     const juce::Identifier SELECTED_KEY{ "selected" };

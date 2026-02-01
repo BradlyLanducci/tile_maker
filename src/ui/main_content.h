@@ -18,7 +18,7 @@ public:
     void resized() override;
 
 private:
-    void setEditor(Theme::EditorType type);
+    void setEditor(Editor::Type type);
 
     BackgroundAnimation m_animator;
 

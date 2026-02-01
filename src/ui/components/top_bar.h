@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/theme/theme.h>
+#include <ui/editors/editor.h>
 #include <ui/theme/nine_slice_look.h>
 
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -8,7 +8,7 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-using SelectedCallback = std::function<void(Theme::EditorType)>;
+using SelectedCallback = std::function<void(Editor::Type)>;
 
 //-------------------------------------------------------------------------------------------------//
 

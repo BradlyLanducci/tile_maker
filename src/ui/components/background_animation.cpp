@@ -30,25 +30,25 @@ BackgroundAnimation::BackgroundAnimation(juce::Component *p_parent)
                                  }
                                  p_parent->repaint();
                              }
-                             else if (m_editorToTransitionTo != Theme::EditorType::None)
+                             else if (m_editorToTransitionTo != Editor::Type::None)
                              {
                                  switch (m_editorToTransitionTo)
                                  {
-                                 case Theme::EditorType::Masker:
+                                 case Editor::Type::Masker:
                                      m_editorImage = m_maskerImage;
                                      break;
-                                 case Theme::EditorType::Blender:
+                                 case Editor::Type::Blender:
                                      m_editorImage = m_blenderImage;
                                      break;
-                                 case Theme::EditorType::Noiser:
+                                 case Editor::Type::Noiser:
                                      m_editorImage = m_noiserImage;
                                      break;
-                                 case Theme::EditorType::None:
+                                 case Editor::Type::None:
                                  default:
                                      return;
                                  }
 
-                                 m_editorToTransitionTo = Theme::EditorType::None;
+                                 m_editorToTransitionTo = Editor::Type::None;
                              }
                          })
                      .build())
@@ -64,7 +64,7 @@ BackgroundAnimation::BackgroundAnimation(juce::Component *p_parent)
 
 //-------------------------------------------------------------------------------------------------//
 
-void BackgroundAnimation::animate(Theme::EditorType type)
+void BackgroundAnimation::animate(Editor::Type type)
 {
     m_editorToTransitionTo = type;
     m_animator.start();

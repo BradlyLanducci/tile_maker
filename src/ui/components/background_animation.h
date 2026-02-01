@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/theme/theme.h>
+#include <ui/editors/editor.h>
 
 #include <juce_animation/juce_animation.h>
 #include <functional>
@@ -14,7 +14,7 @@ class BackgroundAnimation : public juce::Component
 public:
     BackgroundAnimation(juce::Component *p_parent);
 
-    void animate(Theme::EditorType type);
+    void animate(Editor::Type type);
     void draw(juce::Graphics &g, juce::Rectangle<float> bounds);
 
 private:
@@ -30,7 +30,7 @@ private:
     juce::Image m_noiserImage;
     juce::Image m_editorImage;
 
-    Theme::EditorType m_editorToTransitionTo{ Theme::EditorType::None };
+    Editor::Type m_editorToTransitionTo{ Editor::Type::None };
 };
 
 //-------------------------------------------------------------------------------------------------//

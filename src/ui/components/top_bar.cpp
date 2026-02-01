@@ -8,12 +8,12 @@
 constexpr std::vector<std::unique_ptr<juce::Component>> CreateButtons()
 {
     std::vector<std::unique_ptr<juce::Component>> buttons;
-    for (const auto type : magic_enum::enum_values<Theme::EditorType>())
+    for (const auto type : magic_enum::enum_values<Editor::Type>())
     {
-        if (type != Theme::EditorType::None)
+        if (type != Editor::Type::None)
         {
-            buttons.emplace_back(std::make_unique<juce::TextButton>(
-                juce::String{ magic_enum::enum_name<Theme::EditorType>(type).data() }));
+            buttons.emplace_back(
+                std::make_unique<juce::TextButton>(juce::String{ magic_enum::enum_name<Editor::Type>(type).data() }));
         }
     }
     return buttons;
@@ -37,7 +37,7 @@ TopBar::TopBar(SelectedCallback selectedCb)
         {
             p_textButton->onClick = [this, p_textButton]()
             {
-                auto type{ magic_enum::enum_cast<Theme::EditorType>(p_textButton->getButtonText().toStdString()) };
+                auto type{ magic_enum::enum_cast<Editor::Type>(p_textButton->getButtonText().toStdString()) };
                 if (type)
                 {
                     m_selectedCb(type.value());

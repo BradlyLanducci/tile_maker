@@ -11,7 +11,7 @@
 
 MainContent::MainContent()
     : m_animator(this)
-    , m_topBar([this](Theme::EditorType type) { setEditor(type); })
+    , m_topBar([this](Editor::Type type) { setEditor(type); })
     , mp_editor(std::make_unique<Masker>())
     , m_generate("Generate")
 {
@@ -80,22 +80,22 @@ void MainContent::resized()
 
 //-------------------------------------------------------------------------------------------------//
 
-void MainContent::setEditor(Theme::EditorType type)
+void MainContent::setEditor(Editor::Type type)
 {
     m_animator.animate(type);
 
     switch (type)
     {
-    case Theme::EditorType::Masker:
+    case Editor::Type::Masker:
         mp_editor = std::make_unique<Masker>();
         break;
-    case Theme::EditorType::Blender:
+    case Editor::Type::Blender:
         mp_editor = std::make_unique<Blender>();
         break;
-    case Theme::EditorType::Noiser:
+    case Editor::Type::Noiser:
         mp_editor = std::make_unique<Noiser>();
         break;
-    case Theme::EditorType::None:
+    case Editor::Type::None:
     default:
         return;
     }
