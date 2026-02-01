@@ -9,7 +9,8 @@
 class TitledComponent final : public juce::Component
 {
 public:
-    explicit TitledComponent(const juce::String &title, std::unique_ptr<juce::Component> p_component);
+    explicit TitledComponent(const juce::String &title, std::unique_ptr<juce::Component> p_component,
+                             bool drawBackground = true);
 
     void paint(juce::Graphics &g) override;
     void resized() override;
@@ -23,6 +24,8 @@ private:
     juce::String m_title;
     NineSlice m_slice;
     std::unique_ptr<juce::Component> mp_component;
+
+    bool m_drawBackground;
 };
 
 //-------------------------------------------------------------------------------------------------//

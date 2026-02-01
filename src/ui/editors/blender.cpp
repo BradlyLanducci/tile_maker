@@ -130,11 +130,11 @@ void Blender::resized()
     right.setHeight(std::min(right.getWidth(), right.getHeight()));
 
     int sideLength{ std::min(left.getWidth(), left.getHeight()) };
+    sideLength -= Theme::DEFAULT_PADDING;
 
-    int centeredHeight{ (bounds.getHeight() - sideLength) / 2 };
-    mp_inputs->setBounds(left.getX(), centeredHeight, sideLength, sideLength);
-    mp_templates->setBounds(middle.getX(), centeredHeight, sideLength, sideLength);
-    m_output.setBounds(right.getX(), centeredHeight, sideLength, sideLength);
+    mp_inputs->setBounds(left.getX(), 0, sideLength, sideLength);
+    mp_templates->setBounds(middle.getX(), 0, sideLength, sideLength);
+    m_output.setBounds(right.getX(), 0, sideLength, sideLength);
 }
 
 //-------------------------------------------------------------------------------------------------//

@@ -40,7 +40,7 @@ void SelectableFileListModel::paintListBoxItem(int rowNumber, juce::Graphics &g,
         }
 
         g.setFont(Theme::NORMAL_FONT_SIZE);
-        g.drawText(fileName, 0, 0, width, height, juce::Justification::left);
+        g.drawText(fileName, Theme::DEFAULT_PADDING, 0, width, height, juce::Justification::left);
 
         if (child.isValid())
         {

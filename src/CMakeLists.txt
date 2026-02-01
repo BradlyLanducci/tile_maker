@@ -21,7 +21,9 @@ FetchContent_MakeAvailable(magic_enum)
 juce_add_binary_data(
     Assets 
     SOURCES
+        ${CMAKE_SOURCE_DIR}/assets/background_gradient.png
         ${CMAKE_SOURCE_DIR}/assets/nine_slice_panel.png
+        ${CMAKE_SOURCE_DIR}/assets/thumb.png
         ${CMAKE_SOURCE_DIR}/assets/m5x7.ttf
 )
 
@@ -51,6 +53,7 @@ target_compile_definitions(${PROJECT_NAME}
                 JUCE_USE_CURL=0
                 JUCE_APPLICATION_NAME_STRING="$<TARGET_PROPERTY:${PROJECT_NAME},JUCE_PROJECT_NAME>"
                 JUCE_APPLICATION_VERSION_STRING="$<TARGET_PROPERTY:${PROJECT_NAME},JUCE_VERSION>"
+                JUCE_DISABLE_COREGRAPHICS_FONT_SMOOTHING=1
 )
 
 target_link_libraries(${PROJECT_NAME} 
@@ -60,5 +63,6 @@ target_link_libraries(${PROJECT_NAME}
                 juce::juce_recommended_lto_flags
                 juce::juce_recommended_warning_flags
                 juce::juce_gui_extra
+                juce::juce_animation
                 magic_enum
 )

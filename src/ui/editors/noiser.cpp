@@ -14,6 +14,10 @@ const juce::Identifier INPUT_TREE_ID{ "inputs" };
 Noiser::Noiser()
     : m_tree("root")
     , m_output("Output", std::make_unique<ImageFrame>("Select an input"))
+    , m_noiseTypeCombo("Noise Type", std::make_unique<juce::ComboBox>(), false)
+    , m_opacitySlider("Opacity", std::make_unique<juce::Slider>(), false)
+    , m_frequencySlider("Frequency", std::make_unique<juce::Slider>(), false)
+    , m_seedSlider("Seed", std::make_unique<juce::Slider>(), false)
 {
     juce::ValueTree inputTree{ INPUT_TREE_ID };
 
@@ -27,15 +31,20 @@ Noiser::Noiser()
                                                       return dropViewChanged(tree);
                                                   }));
 
-    m_noiseTypeCombo.addItem("Value", 1);
-    m_noiseTypeCombo.addItem("Perlin", 2);
-    m_noiseTypeCombo.addItem("Cellular", 3);
-    m_noiseTypeCombo.addItem("Simplex", 4);
-    m_noiseTypeCombo.setSelectedId(1);
+    auto p_noiseTypeCombo{ m_noiseTypeCombo.getComponent<juce::ComboBox>() };
+    auto p_opacitySlider{ m_opacitySlider.getComponent<juce::Slider>() };
+    auto p_frequencySlider{ m_frequencySlider.getComponent<juce::Slider>() };
+    auto p_seedSlider{ m_seedSlider.getComponent<juce::Slider>() };
 
-    m_opacitySlider.setRange(0.0, 1.0, 0.01);
-    m_frequencySlider.setRange(0.0, 100.0, 0.1);
-    m_seedSlider.setRange(0.0, 10'000.0, 1.0);
+    p_noiseTypeCombo->addItem("Value", 1);
+    p_noiseTypeCombo->addItem("Perlin", 2);
+    p_noiseTypeCombo->addItem("Cellular", 3);
+    p_noiseTypeCombo->addItem("Simplex", 4);
+    p_noiseTypeCombo->setSelectedId(1);
+
+    p_opacitySlider->setRange(0.0, 1.0, 0.01);
+    p_frequencySlider->setRange(0.0, 100.0, 0.1);
+    p_seedSlider->setRange(0.0, 10'000.0, 1.0);
 
     auto forceUpdateCb = [this]()
     {
@@ -43,10 +52,24 @@ Noiser::Noiser()
         updateOutput(selected);
     };
 
-    m_noiseTypeCombo.onChange = [forceUpdateCb]() { forceUpdateCb(); };
-    m_opacitySlider.onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
-    m_frequencySlider.onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
-    m_seedSlider.onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
+    p_noiseTypeCombo->onChange = [forceUpdateCb]() { forceUpdateCb(); };
+    p_opacitySlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
+    p_frequencySlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
+    p_seedSlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
+
+    m_noiseTypeCombo.setLookAndFeel(&m_look);
+    m_opacitySlider.setLookAndFeel(&m_look);
+    m_frequencySlider.setLookAndFeel(&m_look);
+    m_seedSlider.setLookAndFeel(&m_look);
+
+    m_opacitySlider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
+    m_opacitySlider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
+
+    m_frequencySlider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
+    m_frequencySlider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
+
+    m_seedSlider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
+    m_seedSlider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
 
     addAndMakeVisible(*mp_inputs);
     addAndMakeVisible(m_output);
@@ -61,40 +84,38 @@ Noiser::Noiser()
 
 //-------------------------------------------------------------------------------------------------//
 
+Noiser::~Noiser()
+{
+    m_noiseTypeCombo.setLookAndFeel(nullptr);
+    m_opacitySlider.setLookAndFeel(nullptr);
+    m_frequencySlider.setLookAndFeel(nullptr);
+    m_seedSlider.setLookAndFeel(nullptr);
+}
+
+//-------------------------------------------------------------------------------------------------//
+
 void Noiser::resized()
 {
     auto bounds{ getLocalBounds() };
+    auto leftColumn{ bounds.removeFromLeft(400).reduced(Theme::DEFAULT_PADDING) };
     int halfWidth{ bounds.getWidth() / 2 };
-
-    auto bottom{ bounds.removeFromBottom(100) };
-
-    int fourthWidth{ bottom.getWidth() / 4 };
-
-    auto bottomLeft{ bottom.removeFromLeft(fourthWidth) };
-    auto bottomMiddleLeft{ bottom.removeFromLeft(fourthWidth) };
-    auto bottomMiddleRight{ bottom.removeFromLeft(fourthWidth) };
-    auto bottomRight{ bottom };
-
-    m_noiseTypeCombo.setBounds(bottomLeft);
-    m_opacitySlider.setBounds(bottomMiddleLeft);
-    m_frequencySlider.setBounds(bottomMiddleRight);
-    m_seedSlider.setBounds(bottomRight);
 
     auto left{ bounds.removeFromLeft(halfWidth) };
     auto right{ bounds };
 
-    const int padding{ 4 };
-    left.reduce(padding, padding);
-    right.reduce(padding, padding);
-
-    left.setHeight(std::min(left.getWidth(), left.getHeight()));
-    right.setHeight(std::min(right.getWidth(), right.getHeight()));
+    left.reduce(Theme::DEFAULT_PADDING, 0);
+    right.reduce(Theme::DEFAULT_PADDING, 0);
 
     int sideLength{ std::min(left.getWidth(), left.getHeight()) };
+    mp_inputs->setBounds(left.withWidth(sideLength).withHeight(sideLength));
 
-    int centeredHeight{ (bounds.getHeight() - sideLength) / 2 };
-    mp_inputs->setBounds((left.getWidth() - sideLength) / 2, centeredHeight, sideLength, sideLength);
-    m_output.setBounds(right.getX() + (right.getWidth() - sideLength) / 2, centeredHeight, sideLength, sideLength);
+    const int optionHeight{ 75 };
+    m_noiseTypeCombo.setBounds(leftColumn.removeFromTop(optionHeight));
+    m_opacitySlider.setBounds(leftColumn.removeFromTop(optionHeight));
+    m_frequencySlider.setBounds(leftColumn.removeFromTop(optionHeight));
+    m_seedSlider.setBounds(leftColumn.withHeight(optionHeight));
+
+    m_output.setBounds(right.getX() + (right.getWidth() - sideLength) / 2, 0, sideLength, sideLength);
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -139,14 +160,18 @@ juce::String Noiser::getSelectedInput()
 
 Noise Noiser::getSelectedNoise()
 {
-    int selectedId{ m_noiseTypeCombo.getSelectedId() - 1 };
-    std::string selectedText{ m_noiseTypeCombo.getItemText(selectedId).toStdString() };
+    auto p_noiseTypeCombo{ m_noiseTypeCombo.getComponent<juce::ComboBox>() };
+    auto p_frequencySlider{ m_frequencySlider.getComponent<juce::Slider>() };
+    auto p_seedSlider{ m_seedSlider.getComponent<juce::Slider>() };
+
+    int selectedId{ p_noiseTypeCombo->getSelectedId() - 1 };
+    std::string selectedText{ p_noiseTypeCombo->getItemText(selectedId).toStdString() };
     std::transform(selectedText.begin(), selectedText.end(), selectedText.begin(),
                    [](auto c) { return std::toupper(c); });
 
     Noise::Type type{ magic_enum::enum_cast<Noise::Type>(selectedText).value() };
-    float frequency{ (float)m_frequencySlider.getValue() };
-    int seed{ (int)m_seedSlider.getValue() };
+    float frequency{ (float)p_frequencySlider->getValue() };
+    int seed{ (int)p_seedSlider->getValue() };
 
     return Noise{ type, frequency, seed };
 }
@@ -163,7 +188,9 @@ void Noiser::updateOutput(const juce::String &input)
     {
         ImageData inputImageData{ input.toStdString() };
         Noise noise{ getSelectedNoise() };
-        float opacity{ (float)m_opacitySlider.getValue() };
+
+        auto p_opacitySlider{ m_opacitySlider.getComponent<juce::Slider>() };
+        float opacity{ (float)p_opacitySlider->getValue() };
 
         std::unique_ptr<ImageData> p_noisedImage{ ImageManipulation::applyNoise(inputImageData, noise, opacity) };
         if (p_noisedImage)
@@ -180,7 +207,9 @@ void Noiser::generate(const juce::String &baseOutputDirectory)
     juce::ValueTree inputTree{ m_tree.getChildWithName(INPUT_TREE_ID) };
 
     Noise noise{ getSelectedNoise() };
-    float opacity{ (float)m_opacitySlider.getValue() };
+
+    auto p_opacitySlider{ m_opacitySlider.getComponent<juce::Slider>() };
+    float opacity{ (float)p_opacitySlider->getValue() };
 
     for (const auto &inImage : inputTree)
     {

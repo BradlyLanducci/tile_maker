@@ -4,6 +4,7 @@
 #include <ui/components/titled_component.h>
 #include <ui/editors/editor.h>
 #include <processing/image_manipulation.h>
+#include <ui/theme/nine_slice_look.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -13,6 +14,7 @@ class Noiser final
 {
 public:
     Noiser();
+    ~Noiser() override;
 
     void resized() override;
     void generate(const juce::String &baseOutputDirectory) override;
@@ -32,10 +34,11 @@ private:
     TitledComponent m_output;
     std::unique_ptr<TitledComponent> mp_inputs;
 
-    juce::ComboBox m_noiseTypeCombo;
-    juce::Slider m_opacitySlider;
-    juce::Slider m_frequencySlider;
-    juce::Slider m_seedSlider;
+    TitledComponent m_noiseTypeCombo;
+    TitledComponent m_opacitySlider;
+    TitledComponent m_frequencySlider;
+    TitledComponent m_seedSlider;
+    NineSliceLook m_look;
 };
 
 //-------------------------------------------------------------------------------------------------//

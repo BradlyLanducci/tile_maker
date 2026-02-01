@@ -19,6 +19,7 @@ namespace Theme
     constexpr int TITLE_WIDTH{ 200 };
     constexpr int NORMAL_FONT_SIZE{ 16 };
     constexpr int BIG_FONT_SIZE{ 32 };
+    constexpr int HUMONGOUS_FONT_SIZE{ 128 };
 
     constexpr int DEFAULT_PADDING{ 4 };
 

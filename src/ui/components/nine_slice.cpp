@@ -9,55 +9,44 @@ NineSlice::NineSlice(const char *data, int bytes)
 
 //-------------------------------------------------------------------------------------------------//
 
-/// Thanks pizza man
-/// https://forum.juce.com/t/scale-9-images/26275/7
 void NineSlice::draw(juce::Graphics &g, const juce::Rectangle<int> &localBounds)
 {
-    const int iw = m_image.getWidth();
-    const int ih = m_image.getHeight();
+    const int iw{ m_image.getWidth() };
+    const int ih{ m_image.getHeight() };
 
-    // ---- FIXED BORDER THICKNESS (pixels)
-    const int left = 10;
-    const int right = 10;
-    const int top = 10;
-    const int bottom = 10;
+    const int left{ 8 };
+    const int right{ 8 };
+    const int top{ 8 };
+    const int bottom{ 8 };
 
-    // ---- Minimum size required
-    const int minW = left + right;
-    const int minH = top + bottom;
+    const int minW{ left + right };
+    const int minH{ top + bottom };
 
-    if (localBounds.getWidth() < minW || localBounds.getHeight() < minH)
-        return; // cannot draw safely
+    const int dw{ localBounds.getWidth() };
+    const int dh{ localBounds.getHeight() };
+    jassert(dw > minW && dh > minH);
 
-    const int dw = localBounds.getWidth();
-    const int dh = localBounds.getHeight();
+    const int srcCenterW{ iw - left - right };
+    const int srcCenterH{ ih - top - bottom };
 
-    // ---- SOURCE SIZES
-    const int srcCenterW = iw - left - right;
-    const int srcCenterH = ih - top - bottom;
+    const int dstCenterW{ dw - left - right };
+    const int dstCenterH{ dh - top - bottom };
 
-    // ---- DESTINATION SIZES
-    const int dstCenterW = dw - left - right;
-    const int dstCenterH = dh - top - bottom;
+    const int x0{ localBounds.getX() };
+    const int y0{ localBounds.getY() };
+    const int x1{ x0 + left };
+    const int x2{ x0 + left + dstCenterW };
+    const int y1{ y0 + top };
+    const int y2{ y0 + top + dstCenterH };
 
-    const int x0 = localBounds.getX();
-    const int y0 = localBounds.getY();
-    const int x1 = x0 + left;
-    const int x2 = x0 + left + dstCenterW;
-    const int y1 = y0 + top;
-    const int y2 = y0 + top + dstCenterH;
-
-    // ---- TOP ROW
     g.drawImage(m_image, x0, y0, left, top, 0, 0, left, top);
     g.drawImage(m_image, x1, y0, dstCenterW, top, left, 0, srcCenterW, top);
     g.drawImage(m_image, x2, y0, right, top, iw - right, 0, right, top);
 
-    // ---- MIDDLE ROW
     g.drawImage(m_image, x0, y1, left, dstCenterH, 0, top, left, srcCenterH);
     g.drawImage(m_image, x1, y1, dstCenterW, dstCenterH, left, top, srcCenterW, srcCenterH);
     g.drawImage(m_image, x2, y1, right, dstCenterH, iw - right, top, right, srcCenterH);
 
-    // ---- BOTTOM ROW
     g.drawImage(m_image, x0, y2, left, bottom, 0, ih - bottom, left, bottom);
     g.drawImage(m_image, x1, y2, dstCenterW, bottom, left, ih - bottom, srcCenterW, bottom);
     g.drawImage(m_image, x2, y2, right, bottom, iw - right, ih - bottom, right, bottom);

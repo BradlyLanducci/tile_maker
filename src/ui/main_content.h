@@ -4,6 +4,7 @@
 #include <ui/components/directory_chooser.h>
 #include <ui/theme/nine_slice_look.h>
 #include <ui/editors/editor.h>
+#include <ui/components/background_animation.h>
 
 //-------------------------------------------------------------------------------------------------//
 
@@ -17,7 +18,15 @@ public:
     void resized() override;
 
 private:
-    void topBarSelectionChanged(Theme::EditorType type);
+    void setEditor(Theme::EditorType type);
+
+    BackgroundAnimation m_animator;
+    float m_backgroundX{};
+    float m_backgroundY{};
+
+    Theme::EditorType m_editorType;
+
+    juce::Image m_backgroundImage;
 
     TopBar m_topBar;
     std::unique_ptr<Editor> mp_editor{ nullptr };
