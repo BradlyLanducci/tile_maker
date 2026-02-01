@@ -95,25 +95,29 @@ Noiser::~Noiser()
 void Noiser::resized()
 {
     auto bounds{ getLocalBounds() };
-    auto leftColumn{ bounds.removeFromLeft(400).reduced(Theme::DEFAULT_PADDING) };
-    int halfWidth{ bounds.getWidth() / 2 };
+    int thirdWidth{ bounds.getWidth() / 3 };
 
-    auto left{ bounds.removeFromLeft(halfWidth) };
+    auto left{ bounds.removeFromLeft(thirdWidth) };
+    auto middle{ bounds.removeFromLeft(thirdWidth) };
     auto right{ bounds };
 
-    left.reduce(Theme::DEFAULT_PADDING, 0);
-    right.reduce(Theme::DEFAULT_PADDING, 0);
+    left.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+    middle.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+    right.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
 
-    int sideLength{ std::min(left.getWidth(), left.getHeight()) };
-    mp_inputs->setBounds(left.withWidth(sideLength).withHeight(sideLength));
+    int sideLength{ std::min(std::min(left.getWidth(), left.getHeight()), 400) };
+    sideLength -= Theme::DEFAULT_PADDING;
+
+    auto centerX{ (left.getWidth() - sideLength) / 2 };
 
     const int optionHeight{ 75 };
-    m_noiseTypeCombo.setBounds(leftColumn.removeFromTop(optionHeight));
-    m_opacitySlider.setBounds(leftColumn.removeFromTop(optionHeight));
-    m_frequencySlider.setBounds(leftColumn.removeFromTop(optionHeight));
-    m_seedSlider.setBounds(leftColumn.withHeight(optionHeight));
+    m_noiseTypeCombo.setBounds(left.removeFromTop(optionHeight));
+    m_opacitySlider.setBounds(left.removeFromTop(optionHeight));
+    m_frequencySlider.setBounds(left.removeFromTop(optionHeight));
+    m_seedSlider.setBounds(left.withHeight(optionHeight));
 
-    m_output.setBounds(right.getX() + (right.getWidth() - sideLength) / 2, 0, sideLength, sideLength);
+    mp_inputs->setBounds(middle.getX() + centerX, 0, sideLength, sideLength);
+    m_output.setBounds(right.getX() + centerX, 0, sideLength, sideLength);
 }
 
 //-------------------------------------------------------------------------------------------------//

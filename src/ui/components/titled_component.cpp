@@ -34,8 +34,7 @@ void TitledComponent::paint(juce::Graphics &g)
 
     auto bounds{ getBounds() };
     g.setColour(Theme::LIGHT_TEXT);
-    g.drawText(m_title, 0, (int)g.getCurrentFont().getHeight() / 2, bounds.getWidth(), TEXT_SIZE,
-               juce::Justification::centred);
+    g.drawText(m_title, 0, 0, bounds.getWidth(), TEXT_SIZE, juce::Justification::centred);
 }
 
 //-------------------------------------------------------------------------------------------------//

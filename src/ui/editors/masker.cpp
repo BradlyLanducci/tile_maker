@@ -130,21 +130,21 @@ void Masker::resized()
     auto middle{ bounds.removeFromLeft(thirdWidth) };
     auto right{ bounds };
 
-    const int padding{ 4 };
-    left.reduce(padding, padding);
-    middle.reduce(padding, padding);
-    right.reduce(padding, padding);
+    left.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+    middle.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+    right.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
 
     left.setHeight(std::min(left.getWidth(), left.getHeight()));
     middle.setHeight(std::min(middle.getWidth(), middle.getHeight()));
     right.setHeight(std::min(right.getWidth(), right.getHeight()));
 
-    int sideLength{ std::min(left.getWidth(), left.getHeight()) };
+    int sideLength{ std::min(std::min(left.getWidth(), left.getHeight()), 400) };
     sideLength -= Theme::DEFAULT_PADDING;
 
-    mp_inputs->setBounds(left.getX(), 0, sideLength, sideLength);
-    mp_masks->setBounds(middle.getX(), 0, sideLength, sideLength);
-    m_output.setBounds(right.getX(), 0, sideLength, sideLength);
+    auto centerX{ (left.getWidth() - sideLength) / 2 };
+    mp_inputs->setBounds(left.getX() + centerX, 0, sideLength, sideLength);
+    mp_masks->setBounds(middle.getX() + centerX, 0, sideLength, sideLength);
+    m_output.setBounds(right.getX() + centerX, 0, sideLength, sideLength);
 }
 
 //-------------------------------------------------------------------------------------------------//
