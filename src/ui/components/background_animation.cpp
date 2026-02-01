@@ -22,23 +22,9 @@ BackgroundAnimation::BackgroundAnimation(ValueChangedCallback valueChangedCb)
 
 //-------------------------------------------------------------------------------------------------//
 
-bool BackgroundAnimation::isRunning() const
-{
-    return !m_animator.isComplete();
-}
-
-//-------------------------------------------------------------------------------------------------//
-
 void BackgroundAnimation::start()
 {
     m_animator.start();
-}
-
-//-------------------------------------------------------------------------------------------------//
-
-void BackgroundAnimation::stop()
-{
-    m_animator.complete();
 }
 
 //-------------------------------------------------------------------------------------------------//

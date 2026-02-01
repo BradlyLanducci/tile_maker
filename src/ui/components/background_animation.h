@@ -15,10 +15,8 @@ class BackgroundAnimation : public juce::Component
 {
 public:
     BackgroundAnimation(ValueChangedCallback valueChangedCb);
-    bool isRunning() const;
 
     void start();
-    void stop();
 
 private:
     ValueChangedCallback m_valueChangedCb{ nullptr };
