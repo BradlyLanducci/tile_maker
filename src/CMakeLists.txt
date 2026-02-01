@@ -21,6 +21,10 @@ FetchContent_MakeAvailable(magic_enum)
 juce_add_binary_data(
     Assets 
     SOURCES
+        ${CMAKE_SOURCE_DIR}/assets/blender.png
+        ${CMAKE_SOURCE_DIR}/assets/masker.png
+        ${CMAKE_SOURCE_DIR}/assets/noiser.png
+
         ${CMAKE_SOURCE_DIR}/assets/background_gradient.png
         ${CMAKE_SOURCE_DIR}/assets/nine_slice_panel.png
         ${CMAKE_SOURCE_DIR}/assets/thumb.png

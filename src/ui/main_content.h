@@ -21,12 +21,6 @@ private:
     void setEditor(Theme::EditorType type);
 
     BackgroundAnimation m_animator;
-    float m_backgroundX{};
-    float m_backgroundY{};
-
-    Theme::EditorType m_editorType;
-
-    juce::Image m_backgroundImage;
 
     TopBar m_topBar;
     std::unique_ptr<Editor> mp_editor{ nullptr };

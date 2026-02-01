@@ -46,30 +46,28 @@ Noiser::Noiser()
     p_frequencySlider->setRange(0.0, 100.0, 0.1);
     p_seedSlider->setRange(0.0, 10'000.0, 1.0);
 
-    auto forceUpdateCb = [this]()
-    {
-        juce::String selected{ getSelectedInput() };
-        updateOutput(selected);
-    };
+    auto forceUpdateCb{ [this]()
+                        {
+                            juce::String selected{ getSelectedInput() };
+                            updateOutput(selected);
+                        } };
 
     p_noiseTypeCombo->onChange = [forceUpdateCb]() { forceUpdateCb(); };
     p_opacitySlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
     p_frequencySlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
     p_seedSlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
 
+    auto setSliderLook{ [this](juce::Component *c)
+                        {
+                            c->setLookAndFeel(&m_look);
+                            c->setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
+                            c->setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
+                        } };
+
     m_noiseTypeCombo.setLookAndFeel(&m_look);
-    m_opacitySlider.setLookAndFeel(&m_look);
-    m_frequencySlider.setLookAndFeel(&m_look);
-    m_seedSlider.setLookAndFeel(&m_look);
-
-    m_opacitySlider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
-    m_opacitySlider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
-
-    m_frequencySlider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
-    m_frequencySlider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
-
-    m_seedSlider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
-    m_seedSlider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
+    setSliderLook(&m_opacitySlider);
+    setSliderLook(&m_frequencySlider);
+    setSliderLook(&m_seedSlider);
 
     addAndMakeVisible(*mp_inputs);
     addAndMakeVisible(m_output);
