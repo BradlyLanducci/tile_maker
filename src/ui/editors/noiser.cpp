@@ -43,7 +43,8 @@ Noiser::Noiser()
     p_noiseTypeCombo->setSelectedId(1);
 
     p_opacitySlider->setRange(0.0, 1.0, 0.01);
-    p_frequencySlider->setRange(0.0, 100.0, 0.1);
+    p_frequencySlider->setRange(0.0, 100.0, 0.01);
+    p_frequencySlider->setSkewFactorFromMidPoint(10.0);
     p_seedSlider->setRange(0.0, 10'000.0, 1.0);
 
     auto forceUpdateCb{ [this]()
