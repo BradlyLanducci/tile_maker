@@ -3,16 +3,6 @@
 
 //-------------------------------------------------------------------------------------------------//
 
-#define ASSERT(condition, message)                                                                                     \
-    {                                                                                                                  \
-        if (!(condition))                                                                                              \
-        {                                                                                                              \
-            std::cerr << message << std::endl;                                                                         \
-        }                                                                                                              \
-    }
-
-//-------------------------------------------------------------------------------------------------//
-
 std::unique_ptr<ImageData> ImageManipulation::createMaskedImage(const ImageData &in, const ImageData &mask)
 {
     if (in.width != mask.width || in.height != mask.height || in.channels != mask.channels)
