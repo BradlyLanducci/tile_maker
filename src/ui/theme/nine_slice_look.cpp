@@ -39,6 +39,10 @@ void NineSliceLook::drawLinearSlider(juce::Graphics &g, int x, int y, int width,
                                      float minSliderPos, float maxSliderPos, juce::Slider::SliderStyle sliderStyle,
                                      juce::Slider &slider)
 {
+    slider.setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
+    slider.setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
+    slider.setColour(juce::Slider::ColourIds::textBoxBackgroundColourId, Theme::DARK_PURPLE);
+    slider.setColour(juce::Slider::ColourIds::textBoxOutlineColourId, Theme::DARK_PURPLE);
     juce::LookAndFeel_V4::drawLinearSlider(g, x, y, width, height, sliderPos, minSliderPos, maxSliderPos, sliderStyle,
                                            slider);
 

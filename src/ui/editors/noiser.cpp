@@ -57,17 +57,10 @@ Noiser::Noiser()
     p_frequencySlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
     p_seedSlider->onValueChange = [forceUpdateCb]() { forceUpdateCb(); };
 
-    auto setSliderLook{ [this](juce::Component *c)
-                        {
-                            c->setLookAndFeel(&m_look);
-                            c->setColour(juce::Slider::ColourIds::backgroundColourId, Theme::DARK_PURPLE);
-                            c->setColour(juce::Slider::ColourIds::trackColourId, Theme::DARK_PURPLE);
-                        } };
-
     m_noiseTypeCombo.setLookAndFeel(&m_look);
-    setSliderLook(&m_opacitySlider);
-    setSliderLook(&m_frequencySlider);
-    setSliderLook(&m_seedSlider);
+    m_opacitySlider.setLookAndFeel(&m_look);
+    m_frequencySlider.setLookAndFeel(&m_look);
+    m_seedSlider.setLookAndFeel(&m_look);
 
     addAndMakeVisible(*mp_inputs);
     addAndMakeVisible(m_output);
@@ -102,6 +95,7 @@ void Noiser::resized()
     auto right{ bounds };
 
     left.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+
     middle.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
     right.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
 
@@ -111,6 +105,7 @@ void Noiser::resized()
     auto centerX{ (left.getWidth() - sideLength) / 2 };
 
     const int optionHeight{ 75 };
+    left.removeFromLeft(100);
     m_noiseTypeCombo.setBounds(left.removeFromTop(optionHeight));
     m_opacitySlider.setBounds(left.removeFromTop(optionHeight));
     m_frequencySlider.setBounds(left.removeFromTop(optionHeight));

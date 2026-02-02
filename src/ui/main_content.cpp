@@ -99,7 +99,7 @@ void MainContent::resized()
     top.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
     m_topBar.setBounds(top);
 
-    auto bottom{ bounds.removeFromBottom(100).removeFromRight(575) };
+    auto bottom{ bounds.removeFromBottom(100).removeFromRight(490) };
 
     m_directoryChooser.setBounds(bottom.removeFromLeft(200).reduced(10).withWidth(180));
     m_generate.setBounds(bottom.removeFromLeft(200).removeFromBottom(75).reduced(10).withWidth(180));
