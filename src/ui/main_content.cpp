@@ -117,27 +117,32 @@ void MainContent::resized()
 
 void MainContent::setEditor(Editor::Type type)
 {
-    m_animator.animate(type);
-
-    switch (type)
+    if (type != m_editorType)
     {
-    case Editor::Type::Masker:
-        mp_editor = std::make_unique<Masker>();
-        break;
-    case Editor::Type::Blender:
-        mp_editor = std::make_unique<Blender>();
-        break;
-    case Editor::Type::Noiser:
-        mp_editor = std::make_unique<Noiser>();
-        break;
-    case Editor::Type::None:
-    default:
-        return;
-    }
+        m_editorType = type;
 
-    addAndMakeVisible(*mp_editor);
-    repaint();
-    resized(); // This feels wrong, but has caused no issues so far...
+        m_animator.animate(type);
+
+        switch (type)
+        {
+        case Editor::Type::Masker:
+            mp_editor = std::make_unique<Masker>();
+            break;
+        case Editor::Type::Blender:
+            mp_editor = std::make_unique<Blender>();
+            break;
+        case Editor::Type::Noiser:
+            mp_editor = std::make_unique<Noiser>();
+            break;
+        case Editor::Type::None:
+        default:
+            return;
+        }
+
+        addAndMakeVisible(*mp_editor);
+        repaint();
+        resized(); // This feels wrong, but has caused no issues so far...
+    }
 }
 
 //-------------------------------------------------------------------------------------------------//

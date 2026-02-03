@@ -159,7 +159,6 @@ void Blender::generate(const juce::String &baseOutputDirectory)
         mappedImageData.emplace_back(inColor, std::make_unique<ImageData>(inFile.toStdString()));
     }
 
-    uint32_t i{};
     for (const auto &templateImage : templatesTree)
     {
         juce::String templateFile{ templateImage.getType().toString() };
@@ -169,8 +168,20 @@ void Blender::generate(const juce::String &baseOutputDirectory)
 
         if (p_blendedImage)
         {
-            p_blendedImage->filepath = baseOutputDirectory.toStdString() + "/" + templateImageData.filename + "/";
-            p_blendedImage->filename = templateImageData.filename + "_blended_" + std::to_string(i);
+
+            uint32_t i{};
+            std::filesystem::path path{ baseOutputDirectory.toStdString() + "/" + templateImageData.filename + "/" };
+            std::string filename{ templateImageData.filename + "_blended_" + std::to_string(i) };
+            std::filesystem::path fullPath{ path / filename };
+            do
+            {
+                filename = templateImageData.filename + "_blended_" + std::to_string(i);
+                fullPath = path / filename;
+                i++;
+            } while (std::filesystem::exists({ fullPath.string() + ".png" }));
+
+            p_blendedImage->filepath = path.string();
+            p_blendedImage->filename = filename;
 
             p_blendedImage->writeToDisk();
 

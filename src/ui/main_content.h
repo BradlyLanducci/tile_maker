@@ -21,6 +21,8 @@ public:
 private:
     void setEditor(Editor::Type type);
 
+    Editor::Type m_editorType;
+
     BackgroundAnimation m_animator;
 
     TopBar m_topBar;

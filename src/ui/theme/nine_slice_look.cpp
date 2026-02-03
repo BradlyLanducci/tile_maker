@@ -31,6 +31,16 @@ void NineSliceLook::drawButtonBackground(juce::Graphics &g, juce::Button &button
 void NineSliceLook::drawComboBox(juce::Graphics &g, int, int, bool, int, int, int, int, juce::ComboBox &combo)
 {
     m_slice.draw(g, combo.getLocalBounds());
+
+    // I just copy pasta'd this from JUCE default look and feel
+    auto arrowZone{ combo.getLocalBounds().removeFromRight(24).removeFromLeft(20) };
+    juce::Path path;
+    path.startNewSubPath((float)arrowZone.getX() + 3.0f, (float)arrowZone.getCentreY() - 2.0f);
+    path.lineTo((float)arrowZone.getCentreX(), (float)arrowZone.getCentreY() + 3.0f);
+    path.lineTo((float)arrowZone.getRight() - 3.0f, (float)arrowZone.getCentreY() - 2.0f);
+
+    g.setColour(combo.findColour(juce::ComboBox::arrowColourId).withAlpha((combo.isEnabled() ? 0.9f : 0.2f)));
+    g.strokePath(path, juce::PathStrokeType(2.0f));
 }
 
 //-------------------------------------------------------------------------------------------------//
