@@ -28,9 +28,7 @@ void ImageColorPicker::mouseUp(const juce::MouseEvent &event)
 {
     (void)event;
     auto colourSelector{ std::make_unique<juce::ColourSelector>() };
-    colourSelector->setName("background");
-    colourSelector->setCurrentColour(findColour(juce::TextButton::buttonColourId));
-    colourSelector->setColour(juce::ColourSelector::backgroundColourId, juce::Colours::transparentBlack);
+    colourSelector->setLookAndFeel(&m_look);
     colourSelector->setSize(300, 400);
     colourSelector->addChangeListener(this);
     juce::CallOutBox::launchAsynchronously(std::move(colourSelector), getScreenBounds(), nullptr);

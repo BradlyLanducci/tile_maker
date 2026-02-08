@@ -8,7 +8,7 @@ void TitleBarLook::drawDocumentWindowTitleBar(juce::DocumentWindow &window, juce
 {
     g.fillAll(Theme::DARK_PURPLE);
     g.setColour(Theme::LIGHT_TEXT);
-    g.drawText("Iso Tile Maker", window.getTitleBarArea(), juce::Justification::centred);
+    g.drawText("Tile Maker", window.getTitleBarArea(), juce::Justification::centred);
 }
 
 //-------------------------------------------------------------------------------------------------//

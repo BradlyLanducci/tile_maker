@@ -5,7 +5,7 @@
 
 DirectoryChooser::DirectoryChooser()
     : m_button(juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getFileName())
-    , m_chooser("What is this", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory))
+    , m_chooser("Choose an output directory", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory))
 {
     addAndMakeVisible(m_button);
 

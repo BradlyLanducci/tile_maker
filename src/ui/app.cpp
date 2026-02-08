@@ -5,7 +5,7 @@
 void App::initialise(const juce::String &commandLine)
 {
     (void)commandLine;
-    mp_window.reset(new MainWindow("Iso Tile Maker"));
+    mp_window.reset(new MainWindow("Tile Maker"));
     mp_window->setVisible(true);
 }
 
@@ -20,7 +20,7 @@ void App::shutdown()
 
 const juce::String App::getApplicationName()
 {
-    return "Iso Tile Maker";
+    return "Tile Maker";
 }
 
 //-------------------------------------------------------------------------------------------------//

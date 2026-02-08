@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ui/theme/nine_slice_look.h>
+
 #include <juce_gui_basics/juce_gui_basics.h>
 
 //-------------------------------------------------------------------------------------------------//
@@ -19,6 +21,8 @@ public:
 
 private:
     juce::ValueTree m_tree;
+
+    NineSliceLook m_look;
 };
 
 //-------------------------------------------------------------------------------------------------//
