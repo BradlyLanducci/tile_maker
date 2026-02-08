@@ -33,7 +33,7 @@ juce_add_binary_data(
 
 set_target_properties(Assets PROPERTIES FOLDER "Targets")
 
-juce_add_gui_app(${PROJECT_NAME} PRODUCT_NAME "Tile Maker")
+juce_add_gui_app(${PROJECT_NAME} PRODUCT_NAME ${PROJECT_NAME})
 juce_generate_juce_header(${PROJECT_NAME})
 
 file(GLOB_RECURSE SOURCES
