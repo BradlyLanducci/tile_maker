@@ -93,11 +93,3 @@ void NineSliceLook::drawPopupMenuItem(juce::Graphics &g, const juce::Rectangle<i
 }
 
 //-------------------------------------------------------------------------------------------------//
-
-void NineSliceLook::drawCallOutBoxBackground(juce::CallOutBox &callout, juce::Graphics &g, const juce::Path &path,
-                                             juce::Image &cachedImage)
-{
-    g.fillAll(juce::Colours::red);
-}
-
-//-------------------------------------------------------------------------------------------------//

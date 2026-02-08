@@ -28,9 +28,6 @@ public:
                            const juce::String &shortcutKeyText, const juce::Drawable *icon,
                            const juce::Colour *textColour) override;
 
-    void drawCallOutBoxBackground(juce::CallOutBox &callout, juce::Graphics &g, const juce::Path &path,
-                                  juce::Image &cachedImage) override;
-
 private:
     NineSlice m_slice;
 };
