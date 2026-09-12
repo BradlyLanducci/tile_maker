@@ -18,6 +18,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(magic_enum)
 
+FetchContent_Declare(
+        directory_model
+        GIT_REPOSITORY "https://github.com/VainAudio/DirectoryModel.git"
+        GIT_TAG "main"
+        SOURCE_DIR "${CMAKE_BINARY_DIR}/directory_model"
+        BINARY_DIR "${CMAKE_BINARY_DIR}/directory_model_build"
+)
+FetchContent_MakeAvailable(directory_model)
+
 juce_add_binary_data(
     Assets 
     SOURCES
@@ -69,4 +78,7 @@ target_link_libraries(${PROJECT_NAME}
                 juce::juce_gui_extra
                 juce::juce_animation
                 magic_enum
+                vdm::vdm
+                vdm::vdm_directory
+                vdm::vdm_ui
 )
