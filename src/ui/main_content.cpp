@@ -10,9 +10,7 @@
 //-------------------------------------------------------------------------------------------------//
 
 MainContent::MainContent()
-    : m_animator(this)
-    , m_topBar([this](Editor::Type type) { setEditor(type); })
-    , mp_editor(std::make_unique<Masker>())
+    : m_topBar([this](Editor::Type type) { setEditor(type); })
     , m_generate("Generate")
     , m_scaler("Scale", std::make_unique<juce::ComboBox>(), false)
 {
@@ -20,13 +18,7 @@ MainContent::MainContent()
     m_generate.setLookAndFeel(&m_look);
     m_scaler.setLookAndFeel(&m_look);
 
-    m_generate.onClick = [this]()
-    {
-        if (mp_editor)
-        {
-            mp_editor->generate(m_directoryChooser.getOutputDirectory());
-        }
-    };
+    m_generate.onClick = [this]() {};
 
     auto p_scaler{ m_scaler.getComponent<juce::ComboBox>() };
     p_scaler->addItem("75%", 1);
@@ -64,12 +56,14 @@ MainContent::MainContent()
                           (int)(scalar * (float)Theme::DEFAULT_WINDOW_HEIGHT));
     };
 
-    addAndMakeVisible(m_animator);
-    addAndMakeVisible(m_topBar);
-    addAndMakeVisible(*mp_editor);
-    addAndMakeVisible(m_directoryChooser);
-    addAndMakeVisible(m_generate);
-    addAndMakeVisible(m_scaler);
+    // addAndMakeVisible(m_animator);
+    // addAndMakeVisible(m_topBar);
+    // addAndMakeVisible(*mp_editor);
+    // addAndMakeVisible(m_directoryChooser);
+    // addAndMakeVisible(m_generate);
+    // addAndMakeVisible(m_scaler);
+    addAndMakeVisible(m_view);
+    resized();
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -85,8 +79,6 @@ MainContent::~MainContent()
 
 void MainContent::paint(juce::Graphics &g)
 {
-    auto bounds{ getLocalBounds().toFloat() };
-    m_animator.draw(g, bounds);
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -95,22 +87,18 @@ void MainContent::resized()
 {
     auto bounds{ getLocalBounds() };
 
-    auto top{ bounds.removeFromTop(75) };
-    top.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
-    m_topBar.setBounds(top);
+    // auto top{ bounds.removeFromTop(75) };
+    // top.reduce(Theme::DEFAULT_PADDING, Theme::DEFAULT_PADDING);
+    // m_topBar.setBounds(top);
 
-    auto bottom{ bounds.removeFromBottom(100).removeFromRight(490) };
+    // auto bottom{ bounds.removeFromBottom(100).removeFromRight(490) };
 
-    m_directoryChooser.setBounds(bottom.removeFromLeft(200).reduced(10).withWidth(180));
-    m_generate.setBounds(bottom.removeFromLeft(200).removeFromBottom(75).reduced(10).withWidth(180));
-    m_scaler.setBounds(bottom.reduced(6));
+    // m_directoryChooser.setBounds(bottom.removeFromLeft(200).reduced(10).withWidth(180));
+    // m_generate.setBounds(bottom.removeFromLeft(200).removeFromBottom(75).reduced(10).withWidth(180));
+    // m_scaler.setBounds(bottom.reduced(6));
 
-    if (mp_editor)
-    {
-        const int editorPadding{ 50 };
-        bounds.reduce(editorPadding, editorPadding);
-        mp_editor->setBounds(bounds);
-    }
+    m_view.setRootItemVisible(true);
+    m_view.setBounds(bounds);
 }
 
 //-------------------------------------------------------------------------------------------------//
@@ -119,29 +107,29 @@ void MainContent::setEditor(Editor::Type type)
 {
     if (type != m_editorType)
     {
-        m_editorType = type;
+        // m_editorType = type;
 
-        m_animator.animate(type);
+        // m_animator.animate(type);
 
-        switch (type)
-        {
-        case Editor::Type::Masker:
-            mp_editor = std::make_unique<Masker>();
-            break;
-        case Editor::Type::Blender:
-            mp_editor = std::make_unique<Blender>();
-            break;
-        case Editor::Type::Noiser:
-            mp_editor = std::make_unique<Noiser>();
-            break;
-        case Editor::Type::None:
-        default:
-            return;
-        }
+        // switch (type)
+        // {
+        // case Editor::Type::Masker:
+        //     mp_editor = std::make_unique<Masker>();
+        //     break;
+        // case Editor::Type::Blender:
+        //     mp_editor = std::make_unique<Blender>();
+        //     break;
+        // case Editor::Type::Noiser:
+        //     mp_editor = std::make_unique<Noiser>();
+        //     break;
+        // case Editor::Type::None:
+        // default:
+        //     return;
+        // }
 
-        addAndMakeVisible(*mp_editor);
-        repaint();
-        resized(); // This feels wrong, but has caused no issues so far...
+        // addAndMakeVisible(*mp_editor);
+        // repaint();
+        // resized(); // This feels wrong, but has caused no issues so far...
     }
 }
 

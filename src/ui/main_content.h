@@ -7,6 +7,8 @@
 #include <ui/components/background_animation.h>
 #include <ui/components/titled_component.h>
 
+#include <ui/components/tree_view.h>
+
 //-------------------------------------------------------------------------------------------------//
 
 class MainContent : public juce::Component
@@ -23,10 +25,9 @@ private:
 
     Editor::Type m_editorType;
 
-    BackgroundAnimation m_animator;
+    // BackgroundAnimation m_animator;
 
     TopBar m_topBar;
-    std::unique_ptr<Editor> mp_editor{ nullptr };
 
     DirectoryChooser m_directoryChooser;
 
@@ -34,6 +35,8 @@ private:
     juce::TextButton m_generate;
 
     TitledComponent m_scaler;
+
+    TreeView m_view;
 };
 
 //-------------------------------------------------------------------------------------------------//
